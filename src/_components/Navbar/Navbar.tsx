@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import {
 	MagnifyingGlassIcon,
@@ -16,6 +17,7 @@ import {
 export default function Navbar() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
+	const pathname = usePathname();
 	const [searchQuery, setSearchQuery] = useState("");
 
 	// If user types anything in the search bar
@@ -26,12 +28,16 @@ export default function Navbar() {
 		router.push(`/dashboard/products?${params.toString()}`);
 	}
 
-	// if search is empty, remove the search param
-	if (searchQuery === "") {
-		const params = new URLSearchParams(searchParams.toString());
-		params.delete("search");
-		router.push(`/dashboard/products?${params.toString()}`);
-	}
+	// if search is empty, remove the search param - but only on products listing page
+	useEffect(() => {
+		if (searchQuery === "" && pathname === "/dashboard/products") {
+			const params = new URLSearchParams(searchParams.toString());
+			if (params.has("search")) {
+				params.delete("search");
+				router.push(`/dashboard/products?${params.toString()}`);
+			}
+		}
+	}, [searchQuery, searchParams, router, pathname]);
 
 	return (
 		<nav className="flex items-center justify-between w-full h-16 px-6 mx-auto bg-white border-b ">

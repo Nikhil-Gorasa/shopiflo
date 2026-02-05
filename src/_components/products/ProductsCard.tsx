@@ -15,7 +15,7 @@ interface Product {
 export default function ProductsCard({ product }: { product: Product }) {
 	return (
 		<div
-			key={product.id}
+			data-product-id={product.id}
 			className="relative flex flex-col cursor-pointer transition-shadow w-[250px] h-fit hover:shadow-lg">
 			{/* Product Image */}
 			<div className="relative flex justify-end overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-gray-100 to-gray-300">

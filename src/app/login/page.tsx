@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { login } from "@/redux/Slices/auth/authThunk";
 import { useAppDispatch } from "@/hooks/reduxhooks";
-
+import { loadUserCart } from "@/redux/Slices/cart/cartSlice";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,8 +12,9 @@ export default function Page() {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [SignupButton, setSignupButton] = useState(false);
+
 	type LoginFormData = {
-		username: string;
+		email: string;
 		password: string;
 	};
 
@@ -29,9 +30,11 @@ export default function Page() {
 
 		try {
 			await dispatch(
-				login({ username: data.username, password: data.password }),
+				login({ email: data.email, password: data.password }),
 			).unwrap();
 			router.replace("/dashboard/products?category=all");
+			// Load user cart after successful login
+			dispatch(loadUserCart(data.email));
 		} catch (error) {
 			console.log("No such user found, Please sign up", error);
 
@@ -54,19 +57,19 @@ export default function Page() {
 					className="flex flex-col gap-4">
 					<div>
 						<label className="p-2 font-bold text-primary">
-							Username:
+							Email:
 						</label>
 						<input
-							type="text"
-							placeholder="Username"
-							{...register("username", {
-								required: "Username is required",
+							type="email"
+							placeholder="Email"
+							{...register("email", {
+								required: "Email is required",
 							})}
 							className="w-full px-4 py-2 border rounded-lg border-ui-border text-primary-light"
 						/>
-						{errors.username && (
+						{errors.email && (
 							<p className="mt-1 text-sm text-status-error">
-								{errors.username.message as string}
+								{errors.email.message as string}
 							</p>
 						)}
 					</div>

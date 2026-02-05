@@ -2,12 +2,13 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import bcrypt from "bcryptjs";
 
 interface LoginPayload {
-	username: string;
+	email: string;
 	password: string;
 }
 
 interface SignupPayload {
-	username: string;
+	firstname: string;
+	lastname: string;
 	email: string;
 	password: string;
 }
@@ -19,9 +20,7 @@ export const login = createAsyncThunk(
 		// Fetching LocalStorage data and verifying the user credentials
 		const users = JSON.parse(localStorage.getItem("users") || "[]");
 		// Check if user exists
-		const user = users.find(
-			(u: LoginPayload) => u.username === payload.username,
-		);
+		const user = users.find((u: any) => u.email === payload.email);
 		// If user found, verify password
 		const passwordMatch = user
 			? await bcrypt.compare(payload.password, user.password)
@@ -29,7 +28,11 @@ export const login = createAsyncThunk(
 
 		if (user && passwordMatch) {
 			console.log("Found User in LocalStorage right pass");
-			return { isAuthenticated: true, user: user.username };
+			return {
+				isAuthenticated: true,
+				user: `${user.firstname} ${user.lastname}`,
+				email: user.email,
+			};
 		} else if (user && !passwordMatch) {
 			throw new Error("INVALID_CREDENTIALS");
 		} else {
@@ -58,7 +61,10 @@ export const signup = createAsyncThunk(
 				"users",
 				JSON.stringify([
 					...users,
-					{ ...payload, password: hashedPassword },
+					{
+						...payload,
+						password: hashedPassword,
+					},
 				]),
 			);
 		}

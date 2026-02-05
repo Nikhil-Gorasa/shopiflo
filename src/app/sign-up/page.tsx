@@ -7,7 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface SignupFormData {
-	username: string;
+	firstname: string;
+	lastname: string;
 	email: string;
 	password: string;
 }
@@ -53,19 +54,38 @@ export default function Page() {
 					onSubmit={handleSubmit(onSubmitHandler)}>
 					<div>
 						<label className="p-2 font-bold text-primary">
-							Username:
+							First Name:
 						</label>
 						<input
 							type="text"
 							className="w-full p-2 text-black border rounded border-ui-border"
-							{...register("username", {
-								required: "Username is required",
+							{...register("firstname", {
+								required: "First name is required",
 							})}
 						/>
+						{errors.firstname?.message && (
+							<span className="text-status-error">
+								{errors.firstname.message as string}
+							</span>
+						)}
 					</div>
-					{errors.username?.message && (
-						<span>{errors.username.message as string}</span>
-					)}
+					<div>
+						<label className="p-2 font-bold text-primary">
+							Last Name:
+						</label>
+						<input
+							type="text"
+							className="w-full p-2 text-black border rounded border-ui-border"
+							{...register("lastname", {
+								required: "Last name is required",
+							})}
+						/>
+						{errors.lastname?.message && (
+							<span className="text-status-error">
+								{errors.lastname.message as string}
+							</span>
+						)}
+					</div>
 					<div>
 						<label className="p-2 font-bold text-primary">
 							Email:

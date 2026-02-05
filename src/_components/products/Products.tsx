@@ -3,6 +3,7 @@ import ProductsCard from "./ProductsCard";
 import { useSearchParams } from "next/dist/client/components/navigation";
 import { BROAD_CATEGORIES } from "@/_utils/constants/categories";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Product {
 	id: number;
@@ -98,8 +99,23 @@ export default function Products() {
 			// controller.abort();
 		};
 	}, [categorySlug, searchParams]);
+
+	//Handling onclick on product from parent (Event Delegation)
+
+	const router = useRouter();
+
+	function handleContainerClick(e: React.MouseEvent<HTMLDivElement>) {
+		const target = e.target as HTMLElement;
+		const productCard = target.closest("[data-product-id]") as HTMLElement;
+		if (productCard) {
+			const productId = productCard.getAttribute("data-product-id");
+			console.log("Clicked product ID:", productId);
+			router.push(`/dashboard/products/${productId}`);
+		}
+	}
+
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-screen" onClick={handleContainerClick}>
 			{products.length === 0 && (
 				<p className="p-6 text-center text-text-muted">
 					No products found.
