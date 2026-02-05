@@ -31,9 +31,9 @@ export default function Page() {
 			await dispatch(
 				login({ username: data.username, password: data.password }),
 			).unwrap();
-			router.push("/dashboard");
+			router.replace("/dashboard/products?category=all");
 		} catch (error) {
-			console.log("No such user found, Please sign up");
+			console.log("No such user found, Please sign up", error);
 
 			setSignupButton(true);
 			reset();
@@ -66,7 +66,7 @@ export default function Page() {
 						/>
 						{errors.username && (
 							<p className="mt-1 text-sm text-status-error">
-								{errors.username.message as String}
+								{errors.username.message as string}
 							</p>
 						)}
 					</div>
@@ -84,7 +84,7 @@ export default function Page() {
 						/>
 						{errors.password && (
 							<p className="mt-1 text-sm text-status-error">
-								{errors.password.message as String}
+								{errors.password.message as string}
 							</p>
 						)}
 					</div>

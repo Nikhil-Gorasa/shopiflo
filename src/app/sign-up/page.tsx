@@ -1,6 +1,6 @@
 "use client";
-import { set, useForm } from "react-hook-form";
-import { login, signup } from "../../redux/Slices/auth/authThunk";
+import { useForm } from "react-hook-form";
+import { signup } from "../../redux/Slices/auth/authThunk";
 import { useAppDispatch } from "../../hooks/reduxhooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -44,65 +44,65 @@ export default function Page() {
 
 	return (
 		<div className="flex items-center justify-center h-screen bg-primary">
-			<div className="bg-ui-card shadow-lg rounded-xl p-8 w-full max-w-md border border-ui-border">
-				<h2 className="text-2xl font-bold mb-6 text-primary text-center">
+			<div className="w-full max-w-md p-8 border shadow-lg bg-ui-card rounded-xl border-ui-border">
+				<h2 className="mb-6 text-2xl font-bold text-center text-primary">
 					Sign Up
 				</h2>
 				<form
 					className="flex flex-col gap-4"
 					onSubmit={handleSubmit(onSubmitHandler)}>
 					<div>
-						<label className="text-primary font-bold p-2">
+						<label className="p-2 font-bold text-primary">
 							Username:
 						</label>
 						<input
 							type="text"
-							className="w-full p-2 border border-ui-border rounded text-black"
+							className="w-full p-2 text-black border rounded border-ui-border"
 							{...register("username", {
 								required: "Username is required",
 							})}
 						/>
 					</div>
 					{errors.username?.message && (
-						<span>{errors.username.message as String}</span>
+						<span>{errors.username.message as string}</span>
 					)}
 					<div>
-						<label className="text-primary font-bold p-2">
+						<label className="p-2 font-bold text-primary">
 							Email:
 						</label>
 						<input
 							type="email"
-							className="w-full p-2 border border-ui-border rounded text-black"
+							className="w-full p-2 text-black border rounded border-ui-border"
 							{...register("email", {
 								required: "Email is required",
 							})}
 						/>
 					</div>
 					{errors.email?.message && (
-						<span>{errors.email.message as String}</span>
+						<span>{errors.email.message as string}</span>
 					)}
 					<div>
-						<label className="text-primary font-bold p-2">
+						<label className="p-2 font-bold text-primary">
 							Password:
 						</label>
 						<input
 							type="password"
-							className="w-full p-2 border border-ui-border rounded text-black"
+							className="w-full p-2 text-black border rounded border-ui-border"
 							{...register("password", {
 								required: "Password is required",
 							})}
 						/>
 						{errors.password?.message && (
-							<span>{errors.password.message as String}</span>
+							<span>{errors.password.message as string}</span>
 						)}
 					</div>
 					<button
 						type="submit"
-						className="bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark">
+						className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-primary-dark">
 						Sign Up
 					</button>
 					{loginButton && (
-						<p className="text-status-error mt-2">
+						<p className="mt-2 text-status-error">
 							User already exists. Please{" "}
 							<Link
 								href="/login"
