@@ -20,7 +20,9 @@ export const login = createAsyncThunk(
 		// Fetching LocalStorage data and verifying the user credentials
 		const users = JSON.parse(localStorage.getItem("users") || "[]");
 		// Check if user exists
-		const user = users.find((u: any) => u.email === payload.email);
+		const user = users.find(
+			(u: SignupPayload) => u.email === payload.email,
+		);
 		// If user found, verify password
 		const passwordMatch = user
 			? await bcrypt.compare(payload.password, user.password)

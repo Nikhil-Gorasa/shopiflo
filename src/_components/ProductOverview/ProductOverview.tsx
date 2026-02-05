@@ -13,7 +13,6 @@ import {
 	decreaseQuantity,
 	increaseQuantity,
 } from "@/redux/Slices/cart/cartSlice";
-import { useDispatch } from "react-redux";
 
 export interface Product {
 	id: number;
@@ -89,14 +88,6 @@ export default function ProductOverview({ productId }: { productId: string }) {
 	// Increment Decrement functions for quantity after Add to cart
 	const cartItem = cartItems.find((item) => item.productId === product.id);
 	const quantity = cartItem ? cartItem.quantity : 0;
-
-	function incrementQuantity() {
-		// Implement increment logic here
-	}
-
-	function decrementQuantity() {
-		// Implement decrement logic here
-	}
 
 	return (
 		<div className="flex flex-col min-h-screen gap-6 p-6 bg-gray-200 shadow-md md:flex-row">
@@ -198,10 +189,12 @@ export default function ProductOverview({ productId }: { productId: string }) {
 						</span>
 						<span className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
 							-{product.discountPercentage}%{/* Fire gif */}
-							<img
+							<Image
 								src="/fire.gif"
 								alt="Fire"
-								className="relative inline w-4 h-4 bottom-[1px]"
+								width={16}
+								height={16}
+								className="relative inline bottom-[1px]"
 							/>
 						</span>
 					</div>

@@ -15,6 +15,10 @@ interface Product {
 	category: string;
 }
 
+interface ApiResponse {
+	products: Product[];
+}
+
 export default function Products() {
 	const searchParams = useSearchParams();
 	const categorySlug = searchParams.get("category") ?? "all";
@@ -42,7 +46,7 @@ export default function Products() {
 				endpoints = api.map((cat) => `${BASE_URL}/category/${cat}`);
 			}
 
-			let responses: any[] = [];
+			let responses: ApiResponse[] = [];
 			try {
 				responses = await Promise.all(
 					endpoints.map((url) =>
@@ -98,7 +102,7 @@ export default function Products() {
 		return () => {
 			// controller.abort();
 		};
-	}, [categorySlug, searchParams]);
+	}, [categorySlug, searchParams, controller.signal]);
 
 	//Handling onclick on product from parent (Event Delegation)
 
