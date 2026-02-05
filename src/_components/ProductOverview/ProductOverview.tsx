@@ -13,6 +13,7 @@ import {
 	decreaseQuantity,
 	increaseQuantity,
 } from "@/redux/Slices/cart/cartSlice";
+import { addToFavourites } from "@/redux/Slices/favourites/favouritesSlice";
 
 export interface Product {
 	id: number;
@@ -85,9 +86,11 @@ export default function ProductOverview({ productId }: { productId: string }) {
 		);
 	}
 
-	// Increment Decrement functions for quantity after Add to cart
-	const cartItem = cartItems.find((item) => item.productId === product.id);
-	const quantity = cartItem ? cartItem.quantity : 0;
+	// Finding if the product is already in cart to show quantity
+	const curCartItem = cartItems.find(
+		(item) => item.product.id === product.id,
+	);
+	const quantity = curCartItem ? curCartItem.quantity : 0;
 
 	return (
 		<div className="flex flex-col min-h-screen gap-6 p-6 bg-gray-200 shadow-md md:flex-row">
@@ -236,9 +239,15 @@ export default function ProductOverview({ productId }: { productId: string }) {
 								onClick={() =>
 									dispatch(
 										addToCart({
-											productId: product.id,
+											product: {
+												id: product.id,
+												title: product.title,
+												price: product.price,
+												description:
+													product.description,
+												image: product.images[0],
+											},
 											quantity: 1,
-											price: product.price,
 										}),
 									)
 								}
@@ -248,7 +257,22 @@ export default function ProductOverview({ productId }: { productId: string }) {
 							</button>
 						)}
 
-						<button className="px-4 py-2 border rounded-lg text-primary border-primary hover:bg-primary/10">
+						<button
+							onClick={() =>
+								dispatch(
+									addToFavourites({
+										product: {
+											id: product.id,
+											title: product.title,
+											price: product.price,
+											description: product.description,
+											image: product.images[0],
+										},
+										quantity: 1,
+									}),
+								)
+							}
+							className="px-4 py-2 border rounded-lg text-primary border-primary hover:bg-primary/10">
 							<HeartIcon className="inline-block w-5 h-5 mr-2" />
 							Add to Favourites
 						</button>

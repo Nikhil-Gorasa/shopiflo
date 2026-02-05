@@ -1,5 +1,197 @@
+"use client";
 import React from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import {
+	increaseQuantity,
+	decreaseQuantity,
+	removeFromCart,
+	clearCart,
+} from "@/redux/Slices/cart/cartSlice";
+import {
+	TrashIcon,
+	ShoppingBagIcon,
+	CreditCardIcon,
+} from "@heroicons/react/24/outline";
+import CartItem from "@/_components/cart/CartItem";
+import { useEffect, useState } from "react";
 
-export default function page() {
-	return <div>page</div>;
+export default function CartPage() {
+	const dispatch = useAppDispatch();
+	const [currentUser, setCurrentUser] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const { cartItems, totalPrice, email } = useAppSelector(
+		(state) => state.cart,
+	);
+
+	useEffect(() => {
+		// Check localStorage only on client side
+		const savedUser =
+			typeof window !== "undefined"
+				? localStorage.getItem("currentUser")
+				: null;
+		setCurrentUser(savedUser);
+		setIsLoading(false);
+	}, []);
+
+	const taxRate = 0.08;
+	const tax = totalPrice * taxRate;
+	const final = totalPrice + tax;
+
+	// Show loading state while checking authentication
+	if (isLoading) {
+		return (
+			<div className="min-h-screen px-8 py-12 text-black bg-gray-100">
+				<div className="flex flex-col items-center justify-center h-96">
+					<div className="w-8 h-8 border-2 rounded-full border-primary border-t-transparent animate-spin"></div>
+					<p className="mt-4 text-gray-600">Loading...</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (!currentUser) {
+		return (
+			<div className="min-h-screen px-8 py-12 text-black bg-gray-100">
+				<div className="flex flex-col items-center justify-center h-96">
+					<ShoppingBagIcon className="w-16 h-16 mb-4 text-gray-400" />
+					<h2 className="mb-2 text-2xl font-bold text-gray-600">
+						Please Login to View Cart
+					</h2>
+					<p className="text-gray-500">
+						You need to be logged in to access your cart.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (cartItems.length === 0) {
+		return (
+			<div className="min-h-screen px-8 py-12 text-black bg-gray-100">
+				<div className="max-w-6xl mx-auto">
+					<h1 className="mb-8 text-3xl font-bold">Shopping Cart</h1>
+					<div className="flex flex-col items-center justify-center p-12 bg-white rounded-lg shadow-sm h-96">
+						<ShoppingBagIcon className="w-16 h-16 mb-4 text-gray-400" />
+						<h2 className="mb-2 text-2xl font-bold text-gray-600">
+							Your cart is empty
+						</h2>
+						<p className="text-gray-500">
+							Add some products to get started!
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="min-h-screen px-8 py-12 text-black bg-gray-100">
+			<div className="max-w-6xl mx-auto">
+				{/* Head of Cart */}
+				<div className="flex items-center justify-between mb-8">
+					<h1 className="text-3xl font-bold">Shopping Cart</h1>
+					<button
+						onClick={() => dispatch(clearCart())}
+						className="px-4 py-2 text-red-600 transition border border-red-200 rounded-lg hover:bg-red-50">
+						<TrashIcon className="inline-block w-5 h-5 mr-2" />
+						Clear Cart
+					</button>
+				</div>
+
+				<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+					{/* Cart Items */}
+					<div className="lg:col-span-2">
+						<div className="p-6 bg-white rounded-lg shadow-sm">
+							<h2 className="mb-6 text-xl font-semibold">
+								Items ({cartItems.length})
+							</h2>
+							{/* Cart Items List */}
+							<div className="space-y-6">
+								{cartItems.map((item) => (
+									<CartItem
+										key={item.product.id}
+										item={item}
+									/>
+								))}
+							</div>
+						</div>
+					</div>
+
+					{/* Order Summary */}
+					<div className="lg:col-span-1">
+						<div className="p-6 bg-white rounded-lg shadow-sm">
+							<h2 className="mb-6 text-xl font-semibold">
+								Order Summary
+							</h2>
+
+							<div className="space-y-4">
+								<div className="flex justify-between">
+									<span className="text-gray-600">
+										Subtotal
+									</span>
+									<span className="font-medium">
+										${totalPrice.toFixed(2)}
+									</span>
+								</div>
+
+								<div className="flex justify-between">
+									<span className="text-gray-600">
+										Tax (8%)
+									</span>
+									<span className="font-medium">
+										${tax.toFixed(2)}
+									</span>
+								</div>
+
+								<div className="flex justify-between">
+									<span className="text-gray-600">
+										Shipping
+									</span>
+									<span className="font-medium text-green-600">
+										Free
+									</span>
+								</div>
+
+								<hr className="my-4" />
+
+								<div className="flex justify-between text-lg font-bold">
+									<span>Total</span>
+									<span className="text-primary">
+										${final.toFixed(2)}
+									</span>
+								</div>
+
+								<button className="w-full px-6 py-3 mt-6 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
+									<CreditCardIcon className="inline-block w-5 h-5 mr-2" />
+									Proceed to Checkout
+								</button>
+
+								<div className="mt-4 text-xs text-center text-gray-500">
+									<p className="mt-1">
+										Logged in as: {email}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						{/* Promo Code */}
+						<div className="p-6 mt-6 bg-white rounded-lg shadow-sm">
+							<h3 className="mb-4 font-medium">Promo Code</h3>
+							<div className="flex gap-2">
+								<input
+									type="text"
+									placeholder="Enter code"
+									className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+								/>
+								<button className="px-4 py-2 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
+									Apply
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }

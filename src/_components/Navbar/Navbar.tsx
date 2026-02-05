@@ -91,7 +91,7 @@ export default function Navbar() {
 					</button>
 
 					<Link
-						href="/deals"
+						href="/dashboard/cart"
 						className="transition text-text-secondary hover:text-primary">
 						Cart
 					</Link>
@@ -103,7 +103,7 @@ export default function Navbar() {
 						<HeartIcon className="w-6 h-6 text-text-secondary hover:text-primary" />
 					</button>
 					<Link
-						href="/deals"
+						href="/dashboard/favourites"
 						className="transition text-text-secondary hover:text-primary">
 						Favourites
 					</Link>
@@ -115,7 +115,7 @@ export default function Navbar() {
 						<Squares2X2Icon className="w-6 h-6 text-text-secondary hover:text-primary" />
 					</button>
 					<Link
-						href="/deals"
+						href="/dashboard/settings"
 						className="transition text-text-secondary hover:text-primary">
 						Settings
 					</Link>

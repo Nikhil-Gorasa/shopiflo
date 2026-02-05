@@ -30,9 +30,11 @@ export const login = createAsyncThunk(
 
 		if (user && passwordMatch) {
 			console.log("Found User in LocalStorage right pass");
+			// Storing Current User Session
+			localStorage.setItem("currentUser", JSON.stringify(user));
+			// Reflecting current user to redux
+
 			return {
-				isAuthenticated: true,
-				user: `${user.firstname} ${user.lastname}`,
 				email: user.email,
 			};
 		} else if (user && !passwordMatch) {
@@ -69,6 +71,9 @@ export const signup = createAsyncThunk(
 					},
 				]),
 			);
+			return {
+				email: payload.email,
+			};
 		}
 	},
 );

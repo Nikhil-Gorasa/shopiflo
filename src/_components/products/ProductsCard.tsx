@@ -1,7 +1,9 @@
 import Image from "next/image";
 
 import { HeartIcon, StarIcon } from "@heroicons/react/24/outline";
-
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { toggleFavourite } from "@/redux/Slices/favourites/favouritesSlice";
 interface Product {
 	id: number;
 	title: string;
@@ -13,6 +15,34 @@ interface Product {
 }
 
 export default function ProductsCard({ product }: { product: Product }) {
+	const dispatch = useAppDispatch();
+
+	// Check if product is in favourites
+	const { favouriteItems = [] } = useAppSelector(
+		(state) => state.favourites || { favouriteItems: [] },
+	);
+	const isFavourite = favouriteItems.some(
+		(item) => item.product.id === product.id,
+	);
+
+	// Handle favourite toggle
+	const handleFavouriteClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		dispatch(
+			toggleFavourite({
+				product: {
+					id: product.id,
+					title: product.title,
+					description: product.description,
+					price: product.price,
+					image: product.images[0],
+				},
+				quantity: 0,
+			}),
+		);
+	};
+
 	return (
 		<div
 			data-product-id={product.id}
@@ -20,18 +50,22 @@ export default function ProductsCard({ product }: { product: Product }) {
 			{/* Product Image */}
 			<div className="relative flex justify-end overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-gray-100 to-gray-300">
 				{/* Favorite Icon Circle*/}
-				<div className="flex justify-between w-full h-[20%] items-center px-3">
+				<div className="flex justify-between w-full h-[20%] items-center px-3 z-20">
 					{/* Rating Badge */}
 					<span className="relative z-10 flex justify-center gap-1 px-2 py-1 text-xs font-medium bg-white border rounded-full shadow h-fit ">
 						{product.rating} / 5
 						<StarIcon className="w-4 h-4 fill-yellow-400 stroke-none" />
 					</span>
 
-					<div className="relative top-0 z-10 p-2 bg-white rounded-full shadow-md w-fit h-fit">
-						<div className="">
-							<HeartIcon className="w-5 h-5 transition-colors text-primary hover:text-primary" />
-						</div>
-					</div>
+					<button
+						onClick={handleFavouriteClick}
+						className="relative top-0 p-2 transition-all duration-200 bg-white rounded-full shadow-md w-fit h-fit hover:scale-110 hover:shadow-lg">
+						{isFavourite ? (
+							<HeartIconSolid className="w-5 h-5 text-red-500" />
+						) : (
+							<HeartIcon className="w-5 h-5 text-gray-400 transition-colors hover:text-red-500" />
+						)}
+					</button>
 				</div>
 				<Image
 					src={product.images[0]}
