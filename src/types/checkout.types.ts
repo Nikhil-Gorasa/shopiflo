@@ -22,5 +22,5 @@ export interface PaymentDetails {
 	cardName: string;
 	cardNumber: string;
 	expiry: string;
-	cvc: string;
+	cvv: string;
 }

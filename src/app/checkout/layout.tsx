@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { CheckIcon } from "@heroicons/react/24/outline";
@@ -86,7 +87,13 @@ export default function CheckoutLayout({
 				<div className="px-4 py-4 mx-auto max-w-7xl">
 					<Link
 						href="/"
-						className="inline-flex items-center transition-colors text-primary hover:text-primary-dark">
+						className="inline-flex items-center gap-2 transition-colors text-primary hover:text-primary-dark">
+						<Image
+							src="/shopiflo-icon.png"
+							alt="Shopiflo"
+							width={32}
+							height={32}
+						/>
 						<span className="text-xl font-bold">Shopiflo</span>
 					</Link>
 				</div>

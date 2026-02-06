@@ -8,7 +8,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LoginData } from "@/types/auth.types";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import {
+	ExclamationCircleIcon,
+	EyeIcon,
+	EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
@@ -18,6 +22,7 @@ export default function Page() {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [SignupButton, setSignupButton] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 
 	const {
 		register,
@@ -100,14 +105,26 @@ export default function Page() {
 						<label className="block mb-2 text-sm font-semibold text-text-primary">
 							Password
 						</label>
-						<input
-							type="password"
-							placeholder="Enter your password"
-							{...register("password", {
-								required: "Password is required",
-							})}
-							className="w-full px-4 py-3 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
-						/>
+						<div className="relative">
+							<input
+								type={showPassword ? "text" : "password"}
+								placeholder="Enter your password"
+								{...register("password", {
+									required: "Password is required",
+								})}
+								className="w-full px-4 py-3 pr-12 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
+							/>
+							<button
+								type="button"
+								onClick={() => setShowPassword(!showPassword)}
+								className="absolute text-gray-500 transition-colors transform -translate-y-1/2 right-3 top-1/2 hover:text-primary">
+								{showPassword ? (
+									<EyeSlashIcon className="w-5 h-5" />
+								) : (
+									<EyeIcon className="w-5 h-5" />
+								)}
+							</button>
+						</div>
 						{errors.password && (
 							<p className="flex items-center gap-1 mt-2 text-sm text-status-error">
 								<ExclamationCircleIcon className="w-4 h-4" />
@@ -119,18 +136,13 @@ export default function Page() {
 					<button
 						type="submit"
 						className="w-full px-4 py-3.5 mt-2 font-semibold text-white transition-all duration-300 rounded-xl bg-gradient-to-r from-primary to-primary-light hover:shadow-lg hover:shadow-primary/50 hover:scale-[1.02] active:scale-95">
-						Sign In
+						Login
 					</button>
 
 					{SignupButton && (
 						<div className="p-4 mt-2 border-2 rounded-xl bg-status-error/5 border-status-error/20">
 							<p className="text-sm text-center text-text-primary">
-								No account found. Please{" "}
-								<Link
-									href="/sign-up"
-									className="font-semibold transition-colors text-primary hover:text-primary-dark">
-									create an account
-								</Link>
+								No account found. Please create an account
 							</p>
 						</div>
 					)}

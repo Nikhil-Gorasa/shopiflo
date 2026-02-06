@@ -35,13 +35,34 @@ export default function PaymentPage() {
 		if (CheckoutObj && CheckoutObj.shippingAddress) {
 			toast.success("Restored your previous card Information");
 			const payment = CheckoutObj.paymentDetails;
-			// Populate form fields
+			// Populate form fields with formatting applied
 			setValue("cardName", payment?.cardName || "");
-			setValue("cardNumber", payment?.cardNumber || "");
-			setValue("expiry", payment?.expiry || "");
-			setValue("cvc", payment?.cvc || "");
+			setValue(
+				"cardNumber",
+				formatCardNumber(payment?.cardNumber?.replace(/\s/g, "") || ""),
+			);
+			setValue(
+				"expiry",
+				formatExpiryDate(payment?.expiry?.replace(/\D/g, "") || ""),
+			);
+			setValue("cvv", payment?.cvv || "");
 		}
 	}, [setValue]);
+
+	// Format card number with spaces after every 4 digits
+	const formatCardNumber = (value: string) => {
+		const cleaned = value.replace(/\s/g, "");
+		const formatted = cleaned.match(/.{1,4}/g)?.join(" ") || cleaned;
+		return formatted;
+	};
+
+	// Format expiry date with auto "/" after 2 digits
+	const formatExpiryDate = (value: string) => {
+		const cleaned = value.replace(/\D/g, "");
+		if (cleaned.length === 0) return "";
+		if (cleaned.length <= 2) return cleaned;
+		return cleaned.slice(0, 2) + "/" + cleaned.slice(2, 4);
+	};
 
 	const onSubmit = (data: PaymentDetails) => {
 		setIsSubmitting(true);
@@ -92,13 +113,29 @@ export default function PaymentPage() {
 						<input
 							{...register("cardNumber", {
 								required: "Card number is required",
-								pattern: {
-									value: /^\d{16}$/,
-									message: "Card number must be 16 digits",
+								validate: (value) => {
+									const cleaned = value.replace(/\s/g, "");
+									if (!/^\d{16}$/.test(cleaned)) {
+										return "Card number must be 16 digits";
+									}
+									return true;
 								},
 							})}
 							type="text"
-							maxLength={16}
+							maxLength={19}
+							onChange={(e) => {
+								const cleaned = e.target.value.replace(
+									/\D/g,
+									"",
+								);
+								const formatted = formatCardNumber(cleaned);
+								setValue("cardNumber", formatted);
+							}}
+							onInput={(e) => {
+								const target = e.target as HTMLInputElement;
+								const cleaned = target.value.replace(/\D/g, "");
+								target.value = formatCardNumber(cleaned);
+							}}
 							className={`w-full px-3 py-2.5 border rounded-lg ${errors.cardNumber ? "border-status-error" : "border-ui-border"}`}
 							placeholder="1234 5678 9012 3456"
 						/>
@@ -116,13 +153,40 @@ export default function PaymentPage() {
 							<input
 								{...register("expiry", {
 									required: "Expiry date is required",
-									pattern: {
-										value: /^(0[1-9]|1[0-2])\/\d{2}$/,
-										message: "Format MM/YY",
+									validate: (value) => {
+										if (
+											!/^(0[1-9]|1[0-2])\/\d{2}$/.test(
+												value,
+											)
+										) {
+											return "Format MM/YY";
+										}
+										const [month, year] = value.split("/");
+										const currentYear =
+											new Date().getFullYear() % 100;
+										const currentMonth =
+											new Date().getMonth() + 1;
+										const expYear = parseInt(year);
+										const expMonth = parseInt(month);
+
+										if (
+											expYear < currentYear ||
+											(expYear === currentYear &&
+												expMonth < currentMonth)
+										) {
+											return "Card has expired";
+										}
+										return true;
 									},
 								})}
 								type="text"
 								maxLength={5}
+								onChange={(e) => {
+									const formatted = formatExpiryDate(
+										e.target.value,
+									);
+									setValue("expiry", formatted);
+								}}
 								className={`w-full px-3 py-2.5 border rounded-lg ${errors.expiry ? "border-status-error" : "border-ui-border"}`}
 								placeholder="MM/YY"
 							/>
@@ -134,24 +198,33 @@ export default function PaymentPage() {
 						</div>
 						<div>
 							<label className="block mb-2 text-sm font-medium text-text-primary">
-								CVC *
+								CVV *
 							</label>
 							<input
-								{...register("cvc", {
-									required: "CVC is required",
-									pattern: {
-										value: /^[0-9]{3,4}$/,
-										message: "CVC must be 3 or 4 digits",
+								{...register("cvv", {
+									required: "CVV is required",
+									validate: (value) => {
+										if (!/^[0-9]{3}$/.test(value)) {
+											return "CVV must be 3 digits";
+										}
+										return true;
 									},
 								})}
 								type="text"
-								maxLength={4}
-								className={`w-full px-3 py-2.5 border rounded-lg ${errors.cvc ? "border-status-error" : "border-ui-border"}`}
+								maxLength={3}
+								onInput={(e) => {
+									const target = e.target as HTMLInputElement;
+									target.value = target.value.replace(
+										/\D/g,
+										"",
+									);
+								}}
+								className={`w-full px-3 py-2.5 border rounded-lg ${errors.cvv ? "border-status-error" : "border-ui-border"}`}
 								placeholder="123"
 							/>
-							{errors.cvc && (
+							{errors.cvv && (
 								<p className="mt-1 text-sm text-status-error">
-									{errors.cvc.message}
+									{errors.cvv.message}
 								</p>
 							)}
 						</div>

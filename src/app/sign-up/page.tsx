@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { SignUpData } from "@/types/auth.types";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import {
+	ExclamationCircleIcon,
+	EyeIcon,
+	EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
@@ -16,6 +20,7 @@ export default function Page() {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const [loginButton, setLoginButton] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const {
 		handleSubmit,
 		register,
@@ -83,6 +88,11 @@ export default function Page() {
 								className="w-full px-4 py-3 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
 								{...register("firstname", {
 									required: "First name is required",
+									pattern: {
+										value: /^[A-Za-z\s'-]+$/,
+										message:
+											"Last name can only contain letters",
+									},
 								})}
 							/>
 							{errors.firstname?.message && (
@@ -103,6 +113,11 @@ export default function Page() {
 								className="w-full px-4 py-3 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
 								{...register("lastname", {
 									required: "Last name is required",
+									pattern: {
+										value: /^[A-Za-z\s'-]+$/,
+										message:
+											"Last name can only contain letters",
+									},
 								})}
 							/>
 							{errors.lastname?.message && (
@@ -124,6 +139,11 @@ export default function Page() {
 							className="w-full px-4 py-3 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
 							{...register("email", {
 								required: "Email is required",
+								pattern: {
+									value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+									message:
+										"Please enter a valid email address",
+								},
 							})}
 						/>
 						{errors.email?.message && (
@@ -138,22 +158,58 @@ export default function Page() {
 						<label className="block mb-2 text-sm font-semibold text-text-primary">
 							Password
 						</label>
-						<input
-							type="password"
-							placeholder="Create a strong password"
-							className="w-full px-4 py-3 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
-							{...register("password", {
-								required: "Password is required",
-							})}
-						/>
+						<div className="relative">
+							<input
+								type={showPassword ? "text" : "password"}
+								placeholder="Create a strong password"
+								className="w-full px-4 py-3 pr-12 transition border-2 text-text-primary rounded-xl border-ui-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-ui-bg"
+								{...register("password", {
+									required: "Password is required",
+									minLength: {
+										value: 8,
+										message:
+											"Password must be at least 8 characters",
+									},
+									validate: {
+										hasUpperCase: (value) =>
+											/[A-Z]/.test(value) ||
+											"Password must contain at least one uppercase letter",
+										hasLowerCase: (value) =>
+											/[a-z]/.test(value) ||
+											"Password must contain at least one lowercase letter",
+										hasNumber: (value) =>
+											/\d/.test(value) ||
+											"Password must contain at least one number",
+										hasSpecialChar: (value) =>
+											/[!@#$%^&*(),.?":{}|<>]/.test(
+												value,
+											) ||
+											"Password must contain at least one special character",
+									},
+								})}
+							/>
+							<button
+								type="button"
+								onClick={() => setShowPassword(!showPassword)}
+								className="absolute text-gray-500 transition-colors transform -translate-y-1/2 right-3 top-1/2 hover:text-primary">
+								{showPassword ? (
+									<EyeSlashIcon className="w-5 h-5" />
+								) : (
+									<EyeIcon className="w-5 h-5" />
+								)}
+							</button>
+						</div>
 						{errors.password?.message && (
 							<p className="flex items-center gap-1 mt-2 text-sm text-status-error">
 								<ExclamationCircleIcon className="w-4 h-4" />
 								{errors.password.message as string}
 							</p>
 						)}
+						<p className="mt-2 text-xs text-text-muted">
+							Must be 8+ characters with uppercase, lowercase,
+							number, and special character
+						</p>
 					</div>
-
 					<button
 						type="submit"
 						className="w-full px-4 py-3.5 mt-2 font-semibold text-white transition-all duration-300 rounded-xl bg-gradient-to-r from-primary to-primary-light hover:shadow-lg hover:shadow-primary/50 hover:scale-[1.02] active:scale-95">
@@ -163,22 +219,16 @@ export default function Page() {
 					{loginButton && (
 						<div className="p-4 mt-2 border-2 rounded-xl bg-status-error/5 border-status-error/20">
 							<p className="text-sm text-center text-text-primary">
-								Account already exists. Please{" "}
-								<Link
-									href="/login"
-									className="font-semibold transition-colors text-primary hover:text-primary-dark">
-									sign in here
-								</Link>
+								Account already exists. Please Login
 							</p>
 						</div>
 					)}
-
 					<div className="mt-4 text-sm text-center text-text-muted">
 						Already have an account?{" "}
 						<Link
 							href="/login"
 							className="font-semibold transition-colors text-primary hover:text-primary-dark">
-							Sign In
+							Login
 						</Link>
 					</div>
 				</form>
