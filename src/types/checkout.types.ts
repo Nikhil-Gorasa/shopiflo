@@ -15,6 +15,7 @@ export interface ShippingAddress {
 	country: string;
 	countryCode: string;
 	phone: string;
+	email: string;
 }
 
 export interface PaymentDetails {

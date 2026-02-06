@@ -6,7 +6,7 @@ import { ChevronRightIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { MapPinIcon as MapPinIconSolid } from "@heroicons/react/24/solid";
 import { useAppDispatch } from "@/hooks/reduxhooks";
 import { saveShippingAddress } from "@/redux/Slices/checkout/checkoutSlice";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { ShippingAddress as AddressFormData } from "@/types/checkout.types";
 
 // Some Countries that we ship to
@@ -162,13 +162,24 @@ export default function AddressPage() {
 	};
 
 	useEffect(() => {
-		const CheckoutData = localStorage.getItem("checkouts");
-		const currentUser = JSON.parse(
+		const currentUserData = JSON.parse(
 			localStorage.getItem("currentUser") || "null",
 		);
+
+		// Always set current user info first
+		if (currentUserData) {
+			setCurrentUser({
+				firstname: currentUserData.firstname || "",
+				lastname: currentUserData.lastname || "",
+				email: currentUserData.email || "",
+			});
+		}
+
+		// Then check for saved checkout data
+		const CheckoutData = localStorage.getItem("checkouts");
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
 			(checkout: { email: string; shippingAddress?: AddressFormData }) =>
-				currentUser && checkout.email === currentUser.email,
+				currentUserData && checkout.email === currentUserData.email,
 		);
 
 		if (CheckoutObj && CheckoutObj.shippingAddress) {
@@ -183,12 +194,6 @@ export default function AddressPage() {
 			setValue("country", address.country || "IN");
 			setValue("countryCode", address.countryCode || "+91");
 			setValue("phone", address.phone || "");
-
-			setCurrentUser({
-				firstname: address.firstName || "",
-				lastname: address.lastName || "",
-				email: address.email || "",
-			});
 		}
 	}, [setValue]);
 

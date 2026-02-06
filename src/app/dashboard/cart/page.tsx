@@ -106,18 +106,20 @@ export default function CartPage() {
 							</h2>
 							{/* Cart Items List */}
 							<div className="space-y-6">
-								{cartItems.map((item) => (
-									<CartItem
-										key={item.product.id}
-										item={{
-											...item,
-											product: {
-												...item.product,
-												id: item.product.id,
-											},
-										}}
-									/>
-								))}
+								{cartItems
+									.filter((item) => item && item.product)
+									.map((item) => (
+										<CartItem
+											key={item.product.id}
+											item={{
+												...item,
+												product: {
+													...item.product,
+													id: item.product.id,
+												},
+											}}
+										/>
+									))}
 							</div>
 						</div>
 					</div>

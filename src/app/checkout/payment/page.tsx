@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { CreditCardIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { savePaymentDetails } from "@/redux/Slices/checkout/checkoutSlice";
 import { useAppDispatch } from "@/hooks/reduxhooks";
-import { toast } from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 import { PaymentDetails, CheckoutState } from "@/types/checkout.types";
 
 export default function PaymentPage() {

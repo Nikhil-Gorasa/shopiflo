@@ -50,7 +50,9 @@ export default function Navbar() {
 	return (
 		<nav className="flex items-center justify-between w-full h-16 px-6 mx-auto bg-white border-b ">
 			{/* LEFT — Logo */}
-			<Link href="/" className="flex items-center gap-2">
+			<Link
+				href="/dashboard/products"
+				className="flex items-center gap-2">
 				<Image
 					src="/shopiflo-icon.png"
 					alt="Shopiflo"

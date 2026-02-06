@@ -8,6 +8,7 @@ import {
 	ShoppingCartIcon,
 	HeartIcon,
 } from "@heroicons/react/24/outline";
+import { FireIcon } from "@heroicons/react/24/solid";
 import {
 	addToCart,
 	decreaseQuantity,
@@ -155,14 +156,8 @@ export default function ProductOverview({ productId }: { productId: string }) {
 							${product.price}
 						</span>
 						<span className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
-							-{product.discountPercentage}%{/* Fire gif */}
-							<Image
-								src="/fire.gif"
-								alt="Fire"
-								width={16}
-								height={16}
-								className="relative inline bottom-[1px]"
-							/>
+							-{product.discountPercentage}%
+							<FireIcon className="w-4 h-4 text-orange-500" />
 						</span>
 					</div>
 					{/* Original Price, Calculate original price from discounted price */}
@@ -210,7 +205,6 @@ export default function ProductOverview({ productId }: { productId: string }) {
 												description:
 													product.description,
 												image: product.images[0],
-
 											},
 											quantity: 1,
 										}),
@@ -232,10 +226,10 @@ export default function ProductOverview({ productId }: { productId: string }) {
 											title: product.title,
 											price: product.price,
 											description: product.description,
-										images: product.images,
-										rating: product.rating,
-										category: product.category,
-									},
+											images: product.images,
+											rating: product.rating,
+											category: product.category,
+										},
 									}),
 								)
 							}

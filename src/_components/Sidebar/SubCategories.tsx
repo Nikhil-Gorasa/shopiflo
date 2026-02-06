@@ -74,7 +74,7 @@ export default function SubCategories() {
 			// Default to empty array (no checkboxes selected)
 			setSelectedSubCategories([]);
 		}
-	}, [categorySlug]);
+	}, [categorySlug, searchParams]);
 
 	// Format category name for display
 	const formatCategoryName = (category: string) => {

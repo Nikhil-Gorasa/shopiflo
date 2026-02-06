@@ -35,7 +35,7 @@ export default function ConfirmPage() {
 
 		// Clearing Cart
 		dispatch(clearCart());
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<div className="max-w-2xl mx-auto">

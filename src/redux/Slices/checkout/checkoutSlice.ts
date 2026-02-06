@@ -1,6 +1,6 @@
 // Checkout Details Slice
 import { createSlice } from "@reduxjs/toolkit";
-import { CheckoutState } from "@/types/checkout.types";
+import { CheckoutState, ShippingAddress } from "@/types/checkout.types";
 
 const initialState: CheckoutState = {
 	email: "",
@@ -54,7 +54,7 @@ const checkoutSlice = createSlice({
 			state.shippingAddress = userCheckout.shippingAddress;
 			state.paymentDetails = userCheckout.paymentDetails;
 		},
-		saveShippingAddress: (state, action) => {
+		saveShippingAddress: (state, action: { payload: ShippingAddress }) => {
 			state.shippingAddress = action.payload;
 			state.email = action.payload.email;
 			saveCheckoutToStorage(state);
