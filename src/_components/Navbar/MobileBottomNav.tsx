@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/hooks/reduxhooks";
+import { useEffect, useState } from "react";
 
 import {
 	ShoppingCartIcon,
@@ -18,6 +20,20 @@ import {
 
 export default function MobileBottomNav() {
 	const pathname = usePathname();
+	const [mounted, setMounted] = useState(false);
+
+	// Get cart and favourites counts from Redux
+	const cartItems = useAppSelector((state) => state.cart.cartItems);
+	const favouriteItems = useAppSelector(
+		(state) => state.favourites.favouriteItems,
+	);
+	const cartCount = cartItems.length;
+	const favouritesCount = favouriteItems.length;
+
+	// Preventing Hydration Mismatch
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	const navItems = [
 		{
@@ -62,7 +78,25 @@ export default function MobileBottomNav() {
 									? "text-primary"
 									: "text-gray-500 hover:text-primary"
 							}`}>
-							<Icon className="w-6 h-6" />
+							<div className="relative">
+								<Icon className="w-6 h-6" />
+								{mounted &&
+									item.label === "Cart" &&
+									cartCount > 0 && (
+										<span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[9px] font-bold text-white bg-red-500 rounded-full">
+											{cartCount > 99 ? "99+" : cartCount}
+										</span>
+									)}
+								{mounted &&
+									item.label === "Favourites" &&
+									favouritesCount > 0 && (
+										<span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[9px] font-bold text-white bg-red-500 rounded-full">
+											{favouritesCount > 99
+												? "99+"
+												: favouritesCount}
+										</span>
+									)}
+							</div>
 						</Link>
 					);
 				})}

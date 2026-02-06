@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/hooks/reduxhooks";
 
 import {
 	MagnifyingGlassIcon,
@@ -26,6 +27,19 @@ export default function Navbar() {
 	const searchParams = useSearchParams();
 	const pathname = usePathname();
 	const [searchQuery, setSearchQuery] = useState("");
+	const [mounted, setMounted] = useState(false);
+
+	// Get cart and favourites counts from Redux
+	const cartItems = useAppSelector((state) => state.cart.cartItems);
+	const favouriteItems = useAppSelector(
+		(state) => state.favourites.favouriteItems,
+	);
+	const cartCount = cartItems.length;
+	const favouritesCount = favouriteItems.length;
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	// If user types anything in the search bar
 	function handleSearch(value: string) {
@@ -138,6 +152,11 @@ export default function Navbar() {
 								<ShoppingCartIconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
 							</>
 						)}
+						{mounted && cartCount > 0 && (
+							<span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+								{cartCount > 99 ? "99+" : cartCount}
+							</span>
+						)}
 					</div>
 					<span className="hidden font-medium xl:block">Cart</span>
 				</Link>
@@ -158,6 +177,11 @@ export default function Navbar() {
 								<HeartIcon className="w-6 h-6 transition-opacity duration-300 group-hover:opacity-0" />
 								<HeartIconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
 							</>
+						)}
+						{mounted && favouritesCount > 0 && (
+							<span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full">
+								{favouritesCount > 99 ? "99+" : favouritesCount}
+							</span>
 						)}
 					</div>
 					<span className="hidden font-medium xl:block">
