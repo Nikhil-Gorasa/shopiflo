@@ -13,10 +13,7 @@ import {
 	decreaseQuantity,
 	increaseQuantity,
 } from "@/redux/Slices/cart/cartSlice";
-import {
-	addToFavourites,
-	toggleFavourite,
-} from "@/redux/Slices/favourites/favouritesSlice";
+import { toggleFavourite } from "@/redux/Slices/favourites/favouritesSlice";
 
 export interface Product {
 	id: number;

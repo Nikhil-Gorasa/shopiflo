@@ -20,8 +20,8 @@ export default function FavouritesPage() {
 	const [currentUser, setCurrentUser] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const { favouriteItems = [], email } = useAppSelector(
-		(state) => state.favourites || { favouriteItems: [], email: "" },
+	const { favouriteItems = [] } = useAppSelector(
+		(state) => state.favourites || { favouriteItems: [] },
 	);
 
 	useEffect(() => {
@@ -44,15 +44,29 @@ export default function FavouritesPage() {
 		dispatch(removeFromFavourites(productId));
 	};
 
-	const addToCartHandler = (product: any) => {
+	interface Product {
+		id: number;
+		name: string;
+		price: number;
+		image: string;
+		title?: string;
+		description?: string;
+		category?: string;
+	}
+
+	const addToCartHandler = (product: Product) => {
 		dispatch(
 			addToCart({
-				product: product,
+				product: {
+					...product,
+					title: product.title || product.name,
+					description: product.description || "",
+				},
 				quantity: 1,
 			}),
 		);
 		// Toast Notification for adding to cart
-		toast.success(`${product.title} added to cart!`);
+		toast.success(`${product.title || product.name} added to cart!`);
 		// Removing from the favourites
 		dispatch(removeFromFavourites(product.id));
 	};
@@ -186,7 +200,10 @@ export default function FavouritesPage() {
 									{/* Add to Cart Button */}
 									<button
 										onClick={() =>
-											addToCartHandler(item.product)
+											addToCartHandler({
+												...item.product,
+												name: item.product.title,
+											})
 										}
 										className="w-full px-4 py-2 mt-3 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
 										<ShoppingCartIcon className="inline-block w-4 h-4 mr-2" />

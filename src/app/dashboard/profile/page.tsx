@@ -13,7 +13,12 @@ import { toast } from "react-hot-toast";
 export default function ProfilePage() {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
-	const [currentUser, setCurrentUser] = useState<any>(null);
+	const [currentUser, setCurrentUser] = useState<{
+		firstname?: string;
+		lastname?: string;
+		email?: string;
+		username?: string;
+	} | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	// fetching user data from localStorage on component mount

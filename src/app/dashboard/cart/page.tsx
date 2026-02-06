@@ -109,7 +109,13 @@ export default function CartPage() {
 								{cartItems.map((item) => (
 									<CartItem
 										key={item.product.id}
-										item={item}
+										item={{
+											...item,
+											product: {
+												...item.product,
+												id: item.product.id.toString(),
+											},
+										}}
 									/>
 								))}
 							</div>

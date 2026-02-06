@@ -3,7 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CheckIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
 const steps = [
 	{ id: 1, name: "Shipping Address", path: "/checkout/address" },

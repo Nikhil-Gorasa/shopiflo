@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronRightIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { MapPinIcon as MapPinIconSolid } from "@heroicons/react/24/solid";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { useAppDispatch } from "@/hooks/reduxhooks";
 import { saveShippingAddress } from "@/redux/Slices/checkout/checkoutSlice";
 import { toast } from "react-hot-toast";
 
@@ -38,9 +38,12 @@ export default function AddressPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isGeolocating, setIsGeolocating] = useState(false);
 	const [locationError, setLocationError] = useState<string | null>(null);
-	const [currentUser, setCurrentUser] = useState<any>(null);
+	const [currentUser, setCurrentUser] = useState<{
+		firstname?: string;
+		lastname?: string;
+		email?: string;
+	} | null>(null);
 	const dispatch = useAppDispatch();
-	const checkoutState = useAppSelector((state) => state.checkout);
 
 	const {
 		register,
@@ -123,7 +126,7 @@ export default function AddressPage() {
 		navigator.geolocation.getCurrentPosition(
 			async (position) => {
 				const { latitude, longitude } = position.coords;
-				const success = await geocodeLocation(latitude, longitude);
+				await geocodeLocation(latitude, longitude);
 				setIsGeolocating(false);
 			},
 			(error) => {
@@ -177,8 +180,22 @@ export default function AddressPage() {
 			localStorage.getItem("currentUser") || "null",
 		);
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: any) =>
-				currentUser && checkout.email === currentUser.email,
+			(checkout: {
+				email: string;
+				shippingAddress?: {
+					firstName?: string;
+					lastName?: string;
+					email?: string;
+					address?: string;
+					apartment?: string;
+					city?: string;
+					state?: string;
+					postalCode?: string;
+					country?: string;
+					countryCode?: string;
+					phone?: string;
+				};
+			}) => currentUser && checkout.email === currentUser.email,
 		);
 
 		if (CheckoutObj && CheckoutObj.shippingAddress) {

@@ -8,7 +8,20 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CartItems({ item }: { item: any }) {
+interface CartItemProps {
+	product: {
+		id: string;
+		name?: string;
+		title?: string;
+		price: number;
+		image: string;
+		description?: string;
+		category?: string;
+	};
+	quantity: number;
+}
+
+export default function CartItems({ item }: { item: CartItemProps }) {
 	const dispatch = useAppDispatch();
 	return (
 		<div
@@ -30,7 +43,7 @@ export default function CartItems({ item }: { item: any }) {
 				<Link
 					href={`/dashboard/products/${item.product.id}`}
 					className="font-medium text-gray-900 underline">
-					{item.product.title}
+					{item.product.name || item.product.title}
 				</Link>
 				<div className="mt-2">
 					<span className="text-lg font-bold text-primary">
@@ -45,7 +58,13 @@ export default function CartItems({ item }: { item: any }) {
 				<div className="flex gap-2">
 					<button
 						onClick={() =>
-							dispatch(removeFromCart(item.product.id))
+							dispatch(
+								removeFromCart(
+									typeof item.product.id === "string"
+										? parseInt(item.product.id)
+										: item.product.id,
+								),
+							)
 						}
 						className="p-3 text-red-500 transition rounded hover:bg-red-50 h-fit">
 						<TrashIcon className="w-5 h-5" />
@@ -53,7 +72,13 @@ export default function CartItems({ item }: { item: any }) {
 					<div className="flex items-center justify-between px-2 py-2 rounded-lg bg-primary">
 						<button
 							onClick={() =>
-								dispatch(decreaseQuantity(item.product.id))
+								dispatch(
+									decreaseQuantity(
+										typeof item.product.id === "string"
+											? parseInt(item.product.id)
+											: item.product.id,
+									),
+								)
 							}
 							className="flex items-center justify-center w-6 h-6 text-white rounded-md bg-primary hover:bg-primary-dark">
 							-
@@ -63,7 +88,13 @@ export default function CartItems({ item }: { item: any }) {
 						</span>
 						<button
 							onClick={() =>
-								dispatch(increaseQuantity(item.product.id))
+								dispatch(
+									increaseQuantity(
+										typeof item.product.id === "string"
+											? parseInt(item.product.id)
+											: item.product.id,
+									),
+								)
 							}
 							className="flex items-center justify-center w-6 h-6 text-white rounded-md bg-primary hover:bg-primary-dark">
 							+

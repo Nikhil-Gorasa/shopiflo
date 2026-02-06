@@ -16,6 +16,14 @@ interface PaymentFormData {
 
 export default function PaymentPage() {
 	const dispatch = useAppDispatch();
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors },
+	} = useForm<PaymentFormData>();
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		const CheckoutData = localStorage.getItem("checkouts");
@@ -23,8 +31,23 @@ export default function PaymentPage() {
 			localStorage.getItem("currentUser") || "null",
 		);
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: any) =>
-				currentUser && checkout.email === currentUser.email,
+			(checkout: {
+				email: string;
+				shippingAddress?: {
+					firstName?: string;
+					lastName?: string;
+					email?: string;
+					address?: string;
+					apartment?: string;
+					city?: string;
+					state?: string;
+					postalCode?: string;
+					country?: string;
+					countryCode?: string;
+					phone?: string;
+				};
+				paymentDetails?: PaymentFormData;
+			}) => currentUser && checkout.email === currentUser.email,
 		);
 
 		if (CheckoutObj && CheckoutObj.shippingAddress) {
@@ -36,16 +59,7 @@ export default function PaymentPage() {
 			setValue("expiry", payment?.expiry || "");
 			setValue("cvc", payment?.cvc || "");
 		}
-	}, []);
-
-	const {
-		register,
-		handleSubmit,
-		setValue,
-		formState: { errors },
-	} = useForm<PaymentFormData>();
-	const router = useRouter();
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	}, [setValue]);
 
 	const onSubmit = (data: PaymentFormData) => {
 		setIsSubmitting(true);

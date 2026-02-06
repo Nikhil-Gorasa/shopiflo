@@ -4,8 +4,25 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
 export default function ConfirmPage() {
-	const [address, setAddress] = useState<any>(null);
-	const [payment, setPayment] = useState<any>(null);
+	const [address, setAddress] = useState<{
+		firstName?: string;
+		lastName?: string;
+		email?: string;
+		address?: string;
+		apartment?: string;
+		city?: string;
+		state?: string;
+		postalCode?: string;
+		country?: string;
+		countryCode?: string;
+		phone?: string;
+	} | null>(null);
+	const [payment, setPayment] = useState<{
+		cardName?: string;
+		cardNumber?: string;
+		expiry?: string;
+		cvc?: string;
+	} | null>(null);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -15,7 +32,28 @@ export default function ConfirmPage() {
 		);
 		// Searching for the current logged in user's checkout data
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: any) => {
+			(checkout: {
+				email: string;
+				shippingAddress?: {
+					firstName?: string;
+					lastName?: string;
+					email?: string;
+					address?: string;
+					apartment?: string;
+					city?: string;
+					state?: string;
+					postalCode?: string;
+					country?: string;
+					countryCode?: string;
+					phone?: string;
+				};
+				paymentDetails?: {
+					cardName?: string;
+					cardNumber?: string;
+					expiry?: string;
+					cvc?: string;
+				};
+			}) => {
 				return currentUser && checkout.email === currentUser.email;
 			},
 		);
