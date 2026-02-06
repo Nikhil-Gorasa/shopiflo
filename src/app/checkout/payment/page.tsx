@@ -95,8 +95,20 @@ export default function PaymentPage() {
 						<input
 							{...register("cardName", {
 								required: "Cardholder name is required",
+								pattern: {
+									value: /^[A-Za-z\s'-]+$/,
+									message:
+										"Name can only contain letters, spaces, hyphens, and apostrophes",
+								},
 							})}
 							type="text"
+							onInput={(e) => {
+								const target = e.target as HTMLInputElement;
+								target.value = target.value.replace(
+									/[^A-Za-z\s'-]/g,
+									"",
+								);
+							}}
 							className={`w-full px-3 py-2.5 border rounded-lg ${errors.cardName ? "border-status-error" : "border-ui-border"}`}
 							placeholder="John Doe"
 						/>

@@ -86,7 +86,7 @@ export default function CheckoutLayout({
 			<div className="bg-white border-b border-ui-border">
 				<div className="px-4 py-4 mx-auto max-w-7xl">
 					<Link
-						href="/"
+						href="/dashboard/products"
 						className="inline-flex items-center gap-2 transition-colors text-primary hover:text-primary-dark">
 						<Image
 							src="/shopiflo-icon.png"
