@@ -2,6 +2,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { clearCart } from "@/redux/Slices/cart/cartSlice";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
 import Link from "next/link";
 
@@ -14,6 +15,8 @@ import CartItem from "@/_components/cart/CartItem";
 import { useEffect, useState } from "react";
 
 export default function CartPage() {
+	useProtectedRoute(); // Protect this route
+	
 	const dispatch = useAppDispatch();
 	const [currentUser, setCurrentUser] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);

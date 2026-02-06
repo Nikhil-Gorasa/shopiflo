@@ -4,10 +4,13 @@ import CategoriesBar from "@/_components/CategoriesBar/CategoriesBar";
 import Sidebar from "@/_components/Sidebar/Sidebar";
 import { PriceRangeProvider } from "@/_utils/context/PriceRangeContext";
 import { Suspense } from "react";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
 export const dynamic = "force-dynamic";
 
 export default function Page() {
+	useProtectedRoute(); // Protect this route
+
 	return (
 		<PriceRangeProvider>
 			<div className="min-h-screen px-8 text-black bg-gray-100">

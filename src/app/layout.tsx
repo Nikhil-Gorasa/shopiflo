@@ -18,6 +18,10 @@ const geistMono = localFont({
 export const metadata: Metadata = {
 	title: "Shopiflo",
 	description: "Seamless Shopping, Every Time",
+	icons: {
+		icon: [{ url: "/icon.png" }],
+		apple: [{ url: "/icon.png" }],
+	},
 };
 
 export default function RootLayout({

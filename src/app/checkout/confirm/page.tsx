@@ -4,6 +4,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/redux/Slices/cart/cartSlice";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
 import {
 	ShippingAddress,
@@ -11,6 +12,8 @@ import {
 	CheckoutState,
 } from "@/types/checkout.types";
 export default function ConfirmPage() {
+	useProtectedRoute(); // Protect this route
+
 	const [address, setAddress] = useState<ShippingAddress | null>(null);
 	const [payment, setPayment] = useState<PaymentDetails | null>(null);
 	const router = useRouter();

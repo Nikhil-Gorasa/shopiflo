@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { addToCart } from "@/redux/Slices/cart/cartSlice";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import {
 	loadUserFavourites,
 	removeFromFavourites,
@@ -18,6 +19,8 @@ import { Product } from "@/types/product.types";
 import { FavouriteItem } from "@/types/favourite.types";
 
 export default function FavouritesPage() {
+	useProtectedRoute(); // Protect this route
+	
 	const dispatch = useAppDispatch();
 	const [currentUser, setCurrentUser] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);

@@ -8,7 +8,11 @@ import { useState } from "react";
 import { SignUpData } from "@/types/auth.types";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+
 export default function Page() {
+	useAuthRedirect(); // Redirect if already logged in
+
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const [loginButton, setLoginButton] = useState(false);

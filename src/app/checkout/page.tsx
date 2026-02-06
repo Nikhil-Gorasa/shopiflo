@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import {
 	ShoppingBagIcon,
 	TruckIcon,
@@ -28,6 +29,8 @@ const features = [
 ];
 
 export default function CheckoutPage() {
+	useProtectedRoute(); // Protect this route
+
 	// TODO: To change this page into a proper intro page for checkout steps
 	const router = useRouter();
 

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxhooks";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import {
 	UserIcon,
 	EnvelopeIcon,
@@ -11,6 +12,8 @@ import { clearSession } from "@/redux/Slices/auth/authSlice";
 import { toast } from "react-hot-toast";
 
 export default function ProfilePage() {
+	useProtectedRoute(); // Protect this route
+
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const [currentUser, setCurrentUser] = useState<{

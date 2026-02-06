@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ChevronRightIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { MapPinIcon as MapPinIconSolid } from "@heroicons/react/24/solid";
 import { useAppDispatch } from "@/hooks/reduxhooks";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { saveShippingAddress } from "@/redux/Slices/checkout/checkoutSlice";
 import toast from "react-hot-toast";
 import { ShippingAddress as AddressFormData } from "@/types/checkout.types";
@@ -22,6 +23,8 @@ const countries = [
 ];
 
 export default function AddressPage() {
+	useProtectedRoute(); // Protect this route
+
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isGeolocating, setIsGeolocating] = useState(false);
 	const [locationError, setLocationError] = useState<string | null>(null);
