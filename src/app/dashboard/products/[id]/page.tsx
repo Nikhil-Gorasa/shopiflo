@@ -1,9 +1,17 @@
 "use client";
-import ProductOverview from "@/_components/ProductOverview/ProductOverview";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+import { Suspense, lazy } from "react";
+import Loader from "@/_components/Loader/Loader";
+const ProductOverview = lazy(
+	() => import("@/_components/ProductOverview/ProductOverview"),
+);
 
 export default function Page({ params }: { params: { id: string } }) {
 	useProtectedRoute(); // Protect this route
 
-	return <ProductOverview productId={params.id} />;
+	return (
+		<Suspense fallback={<Loader />}>
+			<ProductOverview productId={params.id} />
+		</Suspense>
+	);
 }

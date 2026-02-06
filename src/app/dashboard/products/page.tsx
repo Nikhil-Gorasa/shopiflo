@@ -1,11 +1,14 @@
 "use client";
 import Products from "@/_components/products/Products";
-import CategoriesBar from "@/_components/CategoriesBar/CategoriesBar";
-import Sidebar from "@/_components/Sidebar/Sidebar";
 import { PriceRangeProvider } from "@/_utils/context/PriceRangeContext";
-import { Suspense, useState } from "react";
+import { Suspense, useState, lazy } from "react";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import Loader from "@/_components/Loader/Loader";
+
+const CategoriesBar = lazy(
+	() => import("@/_components/CategoriesBar/CategoriesBar"),
+);
+const Sidebar = lazy(() => import("@/_components/Sidebar/Sidebar"));
 import {
 	FunnelIcon,
 	Squares2X2Icon,
