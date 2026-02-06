@@ -1,5 +1,6 @@
 "use client";
 import ProductsCard from "./ProductsCard";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { BROAD_CATEGORIES } from "@/_utils/constants/categories";
@@ -15,7 +16,7 @@ export default function Products() {
 	const router = useRouter();
 
 	// Fetch products
-	const { products } = useProducts({ categorySlug, searchParams });
+	const { products, loading } = useProducts({ categorySlug, searchParams });
 
 	// Check if current category is "All Categories"
 	const categoryObj = Object.values(BROAD_CATEGORIES).find(
@@ -58,14 +59,29 @@ export default function Products() {
 	}
 
 	return (
-		<div className="min-h-screen mb-6" onClick={handleContainerClick}>
-			{totalProducts === 0 && (
+		<div
+			className="w-full min-h-screen mb-6"
+			onClick={handleContainerClick}>
+			{/* Loading State - Skeleton */}
+			{loading && (
+				<div className="flex justify-center lg:justify-start w-full px-2 lg:px-0">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 w-full max-w-md sm:max-w-none">
+						{Array.from({ length: PRODUCTS_PER_PAGE }).map(
+							(_, index) => (
+								<ProductCardSkeleton key={index} />
+							),
+						)}
+					</div>
+				</div>
+			)}
+
+			{!loading && products.length > 0 && totalProducts === 0 && (
 				<p className="p-6 text-center text-text-muted">
 					No products found.
 				</p>
 			)}
 
-			{totalProducts > 0 && (
+			{!loading && totalProducts > 0 && (
 				<>
 					{/* Products Info */}
 					<div className="mb-4 text-sm text-gray-600">
@@ -75,25 +91,30 @@ export default function Products() {
 					</div>
 
 					{/* Products Grid */}
-					<div className="flex flex-wrap justify-start gap-6">
-						{currentProducts.map((product) => (
-							<ProductsCard key={product.id} product={product} />
-						))}
+					<div className="flex justify-center lg:justify-start w-full px-2 lg:px-0">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 w-full max-w-md sm:max-w-none">
+							{currentProducts.map((product) => (
+								<ProductsCard
+									key={product.id}
+									product={product}
+								/>
+							))}
+						</div>
 					</div>
 
 					{/* Pagination Controls */}
 					{totalPages > 1 && (
-						<div className="flex items-center justify-center gap-2 mt-8 mb-10">
+						<div className="flex items-center justify-center gap-1 sm:gap-2 mt-8 mb-10 flex-wrap px-2">
 							{/* Previous Button */}
 							<button
 								onClick={handlePrevPage}
 								disabled={currentPage === 1}
-								className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+								className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
 								Previous
 							</button>
 
 							{/* Page Numbers */}
-							<div className="flex gap-1">
+							<div className="flex gap-1 flex-wrap justify-center">
 								{Array.from(
 									{ length: totalPages },
 									(_, i) => i + 1,
@@ -101,7 +122,7 @@ export default function Products() {
 									<button
 										key={page}
 										onClick={() => handlePageChange(page)}
-										className={`px-3 py-2 text-sm border rounded-lg ${
+										className={`px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border rounded-lg flex-shrink-0 ${
 											currentPage === page
 												? "bg-primary text-white border-primary"
 												: "border-gray-300 hover:bg-gray-50"
@@ -115,7 +136,7 @@ export default function Products() {
 							<button
 								onClick={handleNextPage}
 								disabled={currentPage === totalPages}
-								className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+								className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
 								Next
 							</button>
 						</div>

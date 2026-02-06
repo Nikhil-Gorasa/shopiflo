@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { addToCart } from "@/redux/Slices/cart/cartSlice";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
@@ -20,7 +21,7 @@ import { FavouriteItem } from "@/types/favourite.types";
 
 export default function FavouritesPage() {
 	useProtectedRoute(); // Protect this route
-	
+
 	const dispatch = useAppDispatch();
 	const [currentUser, setCurrentUser] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -177,15 +178,11 @@ export default function FavouritesPage() {
 								<div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-gray-300 to-gray-500">
 									{item.product.images &&
 									item.product.images.length > 0 ? (
-										<img
+										<Image
 											src={item.product.images[0]}
 											alt={item.product.title}
-											className="object-cover w-full h-full"
-											onError={(e) => {
-												(
-													e.target as HTMLImageElement
-												).style.display = "none";
-											}}
+											fill
+											className="object-cover"
 										/>
 									) : (
 										<div className="flex items-center justify-center h-full text-xs text-white">

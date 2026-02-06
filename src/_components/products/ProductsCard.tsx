@@ -23,7 +23,9 @@ export default function ProductsCard({ product }: { product: Product }) {
 		e.stopPropagation();
 		dispatch(
 			toggleFavourite({
-				product: product,
+				product: {
+					...product,
+				},
 			}),
 		);
 	};
@@ -31,7 +33,7 @@ export default function ProductsCard({ product }: { product: Product }) {
 	return (
 		<div
 			data-product-id={product.id}
-			className="relative flex flex-col cursor-pointer transition-shadow w-[250px] h-fit hover:shadow-lg">
+			className="relative flex flex-col cursor-pointer transition-shadow w-full max-w-[340px] sm:max-w-[260px] lg:max-w-[250px] h-fit hover:shadow-lg mx-auto lg:mx-0">
 			{/* Product Image */}
 			<div className="relative flex justify-end overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-gray-100 to-gray-300">
 				{/* Favorite Icon Circle*/}
@@ -56,20 +58,19 @@ export default function ProductsCard({ product }: { product: Product }) {
 					src={product.images[0]}
 					alt={product.title}
 					fill
-					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					className="object-contain w-full h-full"
 				/>
 			</div>
 
 			{/* Product */}
-			<div className="p-4 bg-white rounded-lg shadow">
+			<div className="p-3 lg:p-4 bg-white rounded-lg shadow">
 				{/* Product Title */}
-				<h3 className="mb-1 text-lg font-semibold truncate text-text-primary">
+				<h3 className="mb-1 text-base lg:text-lg font-semibold truncate text-text-primary">
 					{product.title}
 				</h3>
 
 				{/* Description */}
-				<p className="mb-2 text-sm text-gray-600 line-clamp-2">
+				<p className="mb-2 text-xs lg:text-sm text-gray-600 line-clamp-2">
 					{product.description}
 				</p>
 				{/* Price and Category Row */}
@@ -81,7 +82,7 @@ export default function ProductsCard({ product }: { product: Product }) {
 						</span>
 					</div>
 
-					<span className="text-lg font-bold text-primary">
+					<span className="text-base lg:text-lg font-bold text-primary">
 						${product.price}
 					</span>
 				</div>

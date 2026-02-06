@@ -48,24 +48,40 @@ export default function Navbar() {
 	}, [searchQuery, searchParams, router, pathname]);
 
 	return (
-		<nav className="flex items-center justify-between w-full h-16 px-6 mx-auto bg-white border-b ">
-			{/* LEFT — Logo */}
-			<Link
-				href="/dashboard/products"
-				className="flex items-center gap-2">
-				<Image
-					src="/shopiflo-icon.png"
-					alt="Shopiflo"
-					width={32}
-					height={32}
-				/>
-				<span className="text-xl font-semibold text-text-primary">
-					Shopiflo
-				</span>
-			</Link>
+		<nav className="flex flex-col w-screen max-w-full bg-white border-b lg:flex-row lg:items-center lg:justify-between lg:h-16 lg:px-6 overflow-x-hidden">
+			{/* Mobile Header - Logo + Search */}
+			<div className="flex items-center justify-between w-full gap-1.5 px-2 py-3 lg:w-auto lg:px-0 lg:py-0 lg:gap-2">
+				{/* Logo */}
+				<Link
+					href="/dashboard/products"
+					className="flex items-center gap-1.5 flex-shrink-0">
+					<Image
+						src="/shopiflo-icon.png"
+						alt="Shopiflo"
+						width={28}
+						height={28}
+					/>
+					<span className="text-base sm:text-lg lg:text-xl font-semibold text-text-primary whitespace-nowrap">
+						Shopiflo
+					</span>
+				</Link>
 
-			{/* CENTER — Search */}
-			<div className="flex justify-center flex-1 px-10">
+				{/* Search Bar - Mobile */}
+				<div className="relative flex-1 min-w-0 ml-1.5 lg:hidden">
+					<input
+						type="text"
+						placeholder="Search..."
+						className="w-full px-2.5 py-1.5 pr-9 text-sm text-black border rounded-full border-ui-border bg-ui-bg focus:outline-none focus:ring-2 focus:ring-primary"
+						onChange={(e) => handleSearch(e.target.value)}
+					/>
+					<button className="absolute p-1.5 text-white -translate-y-1/2 rounded-full right-1 top-1/2 bg-primary">
+						<MagnifyingGlassIcon className="w-3.5 h-3.5" />
+					</button>
+				</div>
+			</div>
+
+			{/* CENTER — Search - Desktop */}
+			<div className="justify-center flex-1 hidden px-10 lg:flex">
 				<div className="relative w-full max-w-xl">
 					<input
 						type="text"
@@ -80,8 +96,8 @@ export default function Navbar() {
 				</div>
 			</div>
 
-			{/* RIGHT — Links */}
-			<div className="flex items-center gap-1 text-sm font-medium">
+			{/* RIGHT — Links - Desktop Only */}
+			<div className="items-center hidden gap-1 text-sm font-medium lg:flex">
 				{/* Categories */}
 				<Link
 					href="/dashboard/products"
@@ -100,7 +116,9 @@ export default function Navbar() {
 							</>
 						)}
 					</div>
-					<span className="font-medium">Products</span>
+					<span className="hidden font-medium xl:block">
+						Products
+					</span>
 				</Link>
 
 				{/* Cart */}
@@ -121,7 +139,7 @@ export default function Navbar() {
 							</>
 						)}
 					</div>
-					<span className="font-medium">Cart</span>
+					<span className="hidden font-medium xl:block">Cart</span>
 				</Link>
 
 				{/* Favourites */}
@@ -142,7 +160,9 @@ export default function Navbar() {
 							</>
 						)}
 					</div>
-					<span className="font-medium">Favourites</span>
+					<span className="hidden font-medium xl:block">
+						Favourites
+					</span>
 				</Link>
 
 				{/* Settings */}
@@ -163,7 +183,7 @@ export default function Navbar() {
 							</>
 						)}
 					</div>
-					<span className="font-medium">Profile</span>
+					<span className="hidden font-medium xl:block">Profile</span>
 				</Link>
 			</div>
 		</nav>

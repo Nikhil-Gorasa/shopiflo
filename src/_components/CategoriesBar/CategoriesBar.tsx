@@ -14,7 +14,7 @@ export default function CategoriesBar() {
 	}, []);
 
 	return (
-		<div className="flex items-center gap-3 px-6 py-4 overflow-x-auto">
+		<div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-3 lg:px-4 lg:py-4 lg:overflow-x-auto scrollbar-hide">
 			{Object.entries(BROAD_CATEGORIES).map(([key, value]) => (
 				<CategoryPills
 					key={key}
