@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-	ShoppingBagIcon,
 	ArrowLeftOnRectangleIcon,
 	ArrowRightIcon,
 } from "@heroicons/react/24/solid";

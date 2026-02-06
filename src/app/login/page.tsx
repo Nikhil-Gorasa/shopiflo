@@ -132,7 +132,7 @@ export default function Page() {
 					)}
 
 					<div className="mt-4 text-sm text-center text-text-muted">
-						Don't have an account?{" "}
+						Don&apos;t have an account?{" "}
 						<Link
 							href="/sign-up"
 							className="font-semibold transition-colors text-primary hover:text-primary-dark">

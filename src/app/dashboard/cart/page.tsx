@@ -113,7 +113,7 @@ export default function CartPage() {
 											...item,
 											product: {
 												...item.product,
-												id: item.product.id.toString(),
+												id: item.product.id,
 											},
 										}}
 									/>

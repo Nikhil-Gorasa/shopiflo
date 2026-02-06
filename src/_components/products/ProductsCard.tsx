@@ -23,11 +23,7 @@ export default function ProductsCard({ product }: { product: Product }) {
 		e.stopPropagation();
 		dispatch(
 			toggleFavourite({
-				product: {
-					...product,
-					image: product.images[0],
-				},
-				quantity: 1,
+				product: product,
 			}),
 		);
 	};

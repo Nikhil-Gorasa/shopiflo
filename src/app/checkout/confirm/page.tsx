@@ -69,7 +69,6 @@ export default function ConfirmPage() {
 								{address.postalCode}
 							</div>
 							<div>{address.country}</div>
-							<div>{address.email}</div>
 							<div>
 								{address.countryCode} {address.phone}
 							</div>

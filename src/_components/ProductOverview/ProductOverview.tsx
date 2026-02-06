@@ -210,9 +210,7 @@ export default function ProductOverview({ productId }: { productId: string }) {
 												description:
 													product.description,
 												image: product.images[0],
-												images: product.images,
-												rating: product.rating,
-												category: product.category,
+
 											},
 											quantity: 1,
 										}),
@@ -234,12 +232,10 @@ export default function ProductOverview({ productId }: { productId: string }) {
 											title: product.title,
 											price: product.price,
 											description: product.description,
-											image: product.images[0],
-											images: product.images,
-											rating: product.rating,
-											category: product.category,
-										},
-										quantity: 1,
+										images: product.images,
+										rating: product.rating,
+										category: product.category,
+									},
 									}),
 								)
 							}
