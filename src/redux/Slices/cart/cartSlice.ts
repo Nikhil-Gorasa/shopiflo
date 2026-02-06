@@ -1,22 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-interface item {
-	product: {
-		id: number;
-		title: string;
-		description: string;
-		image: string;
-		price: number;
-	};
-	quantity: number;
-}
-
-// Uniquely Identifying Carts with respect to email
-interface CartState {
-	email: string;
-	cartItems: item[];
-	totalPrice: number;
-}
+import { CartState, item } from "@/types/cart.types";
 
 // Load cart from localStorage based on user's email
 const loadCartFromStorage = (email: string): CartState => {

@@ -1,28 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import bcrypt from "bcryptjs";
-
-interface LoginPayload {
-	email: string;
-	password: string;
-}
-
-interface SignupPayload {
-	firstname: string;
-	lastname: string;
-	email: string;
-	password: string;
-}
+import { LoginData, SignUpData } from "@/types/auth.types";
 
 export const login = createAsyncThunk(
 	"auth/login",
-	async (payload: LoginPayload) => {
+	async (payload: LoginData) => {
 		console.log("Entered Login Thunk");
 		// Fetching LocalStorage data and verifying the user credentials
 		const users = JSON.parse(localStorage.getItem("users") || "[]");
 		// Check if user exists
-		const user = users.find(
-			(u: SignupPayload) => u.email === payload.email,
-		);
+		const user = users.find((u: SignUpData) => u.email === payload.email);
 		// If user found, verify password
 		const passwordMatch = user
 			? await bcrypt.compare(payload.password, user.password)
@@ -48,12 +35,12 @@ export const login = createAsyncThunk(
 
 export const signup = createAsyncThunk(
 	"auth/signup",
-	async (payload: SignupPayload) => {
+	async (payload: SignUpData) => {
 		// Fetching LocalStorage data
 		const users = JSON.parse(localStorage.getItem("users") || "[]");
 		// Check if user email already exists
 		const userExists = users.find(
-			(u: SignupPayload) => u.email === payload.email,
+			(u: SignUpData) => u.email === payload.email,
 		);
 		if (userExists) {
 			throw new Error("USER_ALREADY_EXISTS");

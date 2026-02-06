@@ -14,55 +14,10 @@ import {
 	increaseQuantity,
 } from "@/redux/Slices/cart/cartSlice";
 import { toggleFavourite } from "@/redux/Slices/favourites/favouritesSlice";
-
-export interface Product {
-	id: number;
-	title: string;
-	description: string;
-	category: string;
-	price: number;
-	discountPercentage: number;
-	rating: number;
-	stock: number;
-	tags: string[];
-	brand: string;
-	sku: string;
-	weight: number;
-
-	dimensions: {
-		width: number;
-		height: number;
-		depth: number;
-	};
-
-	warrantyInformation: string;
-	shippingInformation: string;
-	availabilityStatus: string;
-
-	reviews: {
-		rating: number;
-		comment: string;
-		date: string;
-		reviewerName: string;
-		reviewerEmail: string;
-	}[];
-
-	returnPolicy: string;
-	minimumOrderQuantity: number;
-
-	meta: {
-		createdAt: string;
-		updatedAt: string;
-		barcode: string;
-		qrCode: string;
-	};
-
-	images: string[];
-	thumbnail: string;
-}
+import { CompleteProduct } from "@/types/product.types";
 
 export default function ProductOverview({ productId }: { productId: string }) {
-	const [product, setProduct] = useState<Product | null>(null);
+	const [product, setProduct] = useState<CompleteProduct | null>(null);
 
 	const dispatch = useAppDispatch();
 	const cartItems = useAppSelector((state) => state.cart.cartItems);

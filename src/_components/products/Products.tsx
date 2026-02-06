@@ -4,30 +4,21 @@ import { useSearchParams } from "next/dist/client/components/navigation";
 import { BROAD_CATEGORIES } from "@/_utils/constants/categories";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-interface Product {
-	id: number;
-	title: string;
-	description: string;
-	images: string[];
-	rating: number;
-	price: number;
-	category: string;
-}
-
-interface ApiResponse {
-	products: Product[];
-}
+import { Product, ProductApiResponse } from "@/types/product.types";
 
 export default function Products() {
 	const searchParams = useSearchParams();
 	const categorySlug = searchParams.get("category") ?? "all";
 	const controller = new AbortController();
+	const router = useRouter();
+	// State to hold fetched products
 	const [products, setProducts] = useState<Product[]>([]);
+
+	let endpoints: string[] = [];
+	let responses: ProductApiResponse[] = [];
 
 	useEffect(() => {
 		// If no category param, set it to 'all'
-
 		async function fetchProducts() {
 			const categoryObj = Object.values(BROAD_CATEGORIES).find(
 				(cat) => cat.slug === categorySlug,
@@ -38,15 +29,12 @@ export default function Products() {
 			const api = categoryObj.api;
 			const BASE_URL = "https://dummyjson.com/products";
 
-			let endpoints: string[] = [];
-
 			if (typeof api === "string") {
 				endpoints = [`${BASE_URL}`]; // All products
 			} else {
 				endpoints = api.map((cat) => `${BASE_URL}/category/${cat}`);
 			}
 
-			let responses: ApiResponse[] = [];
 			try {
 				responses = await Promise.all(
 					endpoints.map((url) =>
@@ -105,9 +93,6 @@ export default function Products() {
 	}, [categorySlug, searchParams, controller.signal]);
 
 	//Handling onclick on product from parent (Event Delegation)
-
-	const router = useRouter();
-
 	function handleContainerClick(e: React.MouseEvent<HTMLDivElement>) {
 		const target = e.target as HTMLElement;
 		const productCard = target.closest("[data-product-id]") as HTMLElement;

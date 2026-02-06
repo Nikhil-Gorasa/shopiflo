@@ -1,17 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { item } from "@/types/cart.types";
 
-interface item {
-	product: {
-		id: number;
-		title: string;
-		description: string;
-		image: string;
-		price: number;
-	};
-	quantity: number;
-}
-
-// Uniquely Identifying Favourites with respect to email
 interface FavouritesState {
 	email: string;
 	favouriteItems: item[];

@@ -7,20 +7,7 @@ import { MapPinIcon as MapPinIconSolid } from "@heroicons/react/24/solid";
 import { useAppDispatch } from "@/hooks/reduxhooks";
 import { saveShippingAddress } from "@/redux/Slices/checkout/checkoutSlice";
 import { toast } from "react-hot-toast";
-
-interface AddressFormData {
-	firstName: string;
-	lastName: string;
-	email: string;
-	countryCode: string;
-	phone: string;
-	address: string;
-	apartment?: string;
-	city: string;
-	state: string;
-	postalCode: string;
-	country: string;
-}
+import { ShippingAddress as AddressFormData } from "@/types/checkout.types";
 
 // Some Countries that we ship to
 const countries = [
@@ -180,22 +167,8 @@ export default function AddressPage() {
 			localStorage.getItem("currentUser") || "null",
 		);
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: {
-				email: string;
-				shippingAddress?: {
-					firstName?: string;
-					lastName?: string;
-					email?: string;
-					address?: string;
-					apartment?: string;
-					city?: string;
-					state?: string;
-					postalCode?: string;
-					country?: string;
-					countryCode?: string;
-					phone?: string;
-				};
-			}) => currentUser && checkout.email === currentUser.email,
+			(checkout: { email: string; shippingAddress?: AddressFormData }) =>
+				currentUser && checkout.email === currentUser.email,
 		);
 
 		if (CheckoutObj && CheckoutObj.shippingAddress) {

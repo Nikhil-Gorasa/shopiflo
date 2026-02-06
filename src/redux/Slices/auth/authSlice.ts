@@ -1,11 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login, signup } from "./authThunk";
 import { toast } from "react-hot-toast";
-
-interface AuthState {
-	isAuthenticated: boolean;
-	user: string | null;
-}
+import { AuthState } from "@/types/auth.types";
 
 const initialState: AuthState = {
 	isAuthenticated: false,

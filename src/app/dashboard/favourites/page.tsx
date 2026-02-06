@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
+import { Product } from "@/types/product.types";
 
 export default function FavouritesPage() {
 	const dispatch = useAppDispatch();
@@ -43,16 +44,6 @@ export default function FavouritesPage() {
 	const handleRemoveFromFavourites = (productId: number) => {
 		dispatch(removeFromFavourites(productId));
 	};
-
-	interface Product {
-		id: number;
-		name: string;
-		price: number;
-		image: string;
-		title?: string;
-		description?: string;
-		category?: string;
-	}
 
 	const addToCartHandler = (product: Product) => {
 		dispatch(

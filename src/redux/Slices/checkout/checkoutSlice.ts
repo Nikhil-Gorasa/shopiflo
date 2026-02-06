@@ -1,27 +1,6 @@
 // Checkout Details Slice
 import { createSlice } from "@reduxjs/toolkit";
-
-interface CheckoutState {
-	email: string;
-	shippingAddress: {
-		firstName: string;
-		lastName: string;
-		address: string;
-		apartment?: string;
-		city: string;
-		state: string;
-		postalCode: string;
-		country: string;
-		countryCode: string;
-		phone: string;
-	} | null;
-	paymentDetails: {
-		cardName: string;
-		cardNumber: string;
-		expiry: string;
-		cvc: string;
-	} | null;
-}
+import { CheckoutState } from "@/types/checkout.types";
 
 const initialState: CheckoutState = {
 	email: "",

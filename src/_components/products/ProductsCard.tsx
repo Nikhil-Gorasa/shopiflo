@@ -4,15 +4,7 @@ import { HeartIcon, StarIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { toggleFavourite } from "@/redux/Slices/favourites/favouritesSlice";
-interface Product {
-	id: number;
-	title: string;
-	description: string;
-	images: string[];
-	rating: number;
-	price: number;
-	category: string;
-}
+import { Product } from "@/types/product.types";
 
 export default function ProductsCard({ product }: { product: Product }) {
 	const dispatch = useAppDispatch();
@@ -32,13 +24,10 @@ export default function ProductsCard({ product }: { product: Product }) {
 		dispatch(
 			toggleFavourite({
 				product: {
-					id: product.id,
-					title: product.title,
-					description: product.description,
-					price: product.price,
+					...product,
 					image: product.images[0],
 				},
-				quantity: 0,
+				quantity: 1,
 			}),
 		);
 	};

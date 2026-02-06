@@ -6,13 +6,7 @@ import { CreditCardIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { savePaymentDetails } from "@/redux/Slices/checkout/checkoutSlice";
 import { useAppDispatch } from "@/hooks/reduxhooks";
 import { toast } from "react-hot-toast/headless";
-
-interface PaymentFormData {
-	cardName: string;
-	cardNumber: string;
-	expiry: string;
-	cvc: string;
-}
+import { PaymentDetails, CheckoutState } from "@/types/checkout.types";
 
 export default function PaymentPage() {
 	const dispatch = useAppDispatch();
@@ -21,7 +15,7 @@ export default function PaymentPage() {
 		handleSubmit,
 		setValue,
 		formState: { errors },
-	} = useForm<PaymentFormData>();
+	} = useForm<PaymentDetails>();
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,23 +25,8 @@ export default function PaymentPage() {
 			localStorage.getItem("currentUser") || "null",
 		);
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: {
-				email: string;
-				shippingAddress?: {
-					firstName?: string;
-					lastName?: string;
-					email?: string;
-					address?: string;
-					apartment?: string;
-					city?: string;
-					state?: string;
-					postalCode?: string;
-					country?: string;
-					countryCode?: string;
-					phone?: string;
-				};
-				paymentDetails?: PaymentFormData;
-			}) => currentUser && checkout.email === currentUser.email,
+			(checkout: CheckoutState) =>
+				currentUser && checkout.email === currentUser.email,
 		);
 
 		if (CheckoutObj && CheckoutObj.shippingAddress) {
@@ -61,7 +40,7 @@ export default function PaymentPage() {
 		}
 	}, [setValue]);
 
-	const onSubmit = (data: PaymentFormData) => {
+	const onSubmit = (data: PaymentDetails) => {
 		setIsSubmitting(true);
 
 		dispatch(savePaymentDetails(data));

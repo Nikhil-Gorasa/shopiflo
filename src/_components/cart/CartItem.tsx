@@ -7,19 +7,7 @@ import {
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-
-interface CartItemProps {
-	product: {
-		id: string;
-		name?: string;
-		title?: string;
-		price: number;
-		image: string;
-		description?: string;
-		category?: string;
-	};
-	quantity: number;
-}
+import { item as CartItemProps } from "@/types/cart.types";
 
 export default function CartItems({ item }: { item: CartItemProps }) {
 	const dispatch = useAppDispatch();
@@ -43,7 +31,7 @@ export default function CartItems({ item }: { item: CartItemProps }) {
 				<Link
 					href={`/dashboard/products/${item.product.id}`}
 					className="font-medium text-gray-900 underline">
-					{item.product.name || item.product.title}
+					{item.product.title}
 				</Link>
 				<div className="mt-2">
 					<span className="text-lg font-bold text-primary">
@@ -58,13 +46,7 @@ export default function CartItems({ item }: { item: CartItemProps }) {
 				<div className="flex gap-2">
 					<button
 						onClick={() =>
-							dispatch(
-								removeFromCart(
-									typeof item.product.id === "string"
-										? parseInt(item.product.id)
-										: item.product.id,
-								),
-							)
+							dispatch(removeFromCart(Number(item.product.id)))
 						}
 						className="p-3 text-red-500 transition rounded hover:bg-red-50 h-fit">
 						<TrashIcon className="w-5 h-5" />
@@ -73,11 +55,7 @@ export default function CartItems({ item }: { item: CartItemProps }) {
 						<button
 							onClick={() =>
 								dispatch(
-									decreaseQuantity(
-										typeof item.product.id === "string"
-											? parseInt(item.product.id)
-											: item.product.id,
-									),
+									decreaseQuantity(Number(item.product.id)),
 								)
 							}
 							className="flex items-center justify-center w-6 h-6 text-white rounded-md bg-primary hover:bg-primary-dark">
@@ -89,11 +67,7 @@ export default function CartItems({ item }: { item: CartItemProps }) {
 						<button
 							onClick={() =>
 								dispatch(
-									increaseQuantity(
-										typeof item.product.id === "string"
-											? parseInt(item.product.id)
-											: item.product.id,
-									),
+									increaseQuantity(Number(item.product.id)),
 								)
 							}
 							className="flex items-center justify-center w-6 h-6 text-white rounded-md bg-primary hover:bg-primary-dark">

@@ -7,25 +7,21 @@ import { loadUserCart } from "@/redux/Slices/cart/cartSlice";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { LoginData } from "@/types/auth.types";
 
 export default function Page() {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [SignupButton, setSignupButton] = useState(false);
 
-	type LoginFormData = {
-		email: string;
-		password: string;
-	};
-
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors },
-	} = useForm<LoginFormData>();
+	} = useForm<LoginData>();
 
-	const onSubmit = async (data: LoginFormData) => {
+	const onSubmit = async (data: LoginData) => {
 		console.log("Login data:", data);
 
 		try {

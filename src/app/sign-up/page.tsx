@@ -5,13 +5,7 @@ import { useAppDispatch } from "../../hooks/reduxhooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-
-interface SignupFormData {
-	firstname: string;
-	lastname: string;
-	email: string;
-	password: string;
-}
+import { SignUpData } from "@/types/auth.types";
 
 export default function Page() {
 	const router = useRouter();
@@ -22,9 +16,9 @@ export default function Page() {
 		register,
 		reset,
 		formState: { errors },
-	} = useForm<SignupFormData>();
+	} = useForm<SignUpData>();
 
-	const onSubmitHandler = async (data: SignupFormData) => {
+	const onSubmitHandler = async (data: SignUpData) => {
 		console.log("Signup Data : ", data);
 		// If Successful clear the form
 		try {
