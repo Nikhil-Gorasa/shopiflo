@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function PriceRange() {
-	const maxValue = 2000;
+interface PriceRangeProps {
+	maxValue?: number;
+}
+
+export default function PriceRange({ maxValue = 2000 }: PriceRangeProps) {
 	const minValue = 0;
 
 	const [value, setValue] = useState(maxValue);
 
 	const router = useRouter();
 	const searchParams = useSearchParams();
+
+	// Update value when maxValue changes
+	useEffect(() => {
+		setValue(maxValue);
+	}, [maxValue]);
 
 	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const value = Number(event.target.value);

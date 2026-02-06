@@ -15,6 +15,7 @@ import {
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
 import { Product } from "@/types/product.types";
+import { FavouriteItem } from "@/types/favourite.types";
 
 export default function FavouritesPage() {
 	const dispatch = useAppDispatch();
@@ -23,47 +24,77 @@ export default function FavouritesPage() {
 
 	const { favouriteItems = [] } = useAppSelector(
 		(state) => state.favourites || { favouriteItems: [] },
-	);
+	) as { favouriteItems: FavouriteItem[] };
 
 	useEffect(() => {
 		// Check localStorage only on client side
-		const savedUser =
-			typeof window !== "undefined"
-				? localStorage.getItem("currentUser")
-				: null;
-		setCurrentUser(savedUser);
+		try {
+			const savedUser =
+				typeof window !== "undefined"
+					? localStorage.getItem("currentUser")
+					: null;
+			setCurrentUser(savedUser);
 
-		// Load favourites from Redux when user is found
-		if (savedUser) {
-			const userEmail = JSON.parse(savedUser).email;
-			dispatch(loadUserFavourites(userEmail));
+			// Load favourites from Redux when user is found
+			if (savedUser) {
+				const parsedUser = JSON.parse(savedUser);
+				if (parsedUser && parsedUser.email) {
+					dispatch(loadUserFavourites(parsedUser.email));
+				}
+			}
+		} catch (error) {
+			console.error("Error loading user data:", error);
+			// Clear invalid localStorage data
+			if (typeof window !== "undefined") {
+				localStorage.removeItem("currentUser");
+			}
+		} finally {
+			setIsLoading(false);
 		}
-		setIsLoading(false);
 	}, [dispatch]);
 
 	const handleRemoveFromFavourites = (productId: number) => {
-		dispatch(removeFromFavourites(productId));
+		try {
+			dispatch(removeFromFavourites(productId));
+			toast.success("Item removed from favourites");
+		} catch (error) {
+			console.error("Error removing from favourites:", error);
+			toast.error("Failed to remove item from favourites");
+		}
 	};
 
 	const addToCartHandler = (product: Product) => {
-		dispatch(
-			addToCart({
-				product: {
-					...product,
-					title: product.title || product.name,
-					description: product.description || "",
-				},
-				quantity: 1,
-			}),
-		);
-		// Toast Notification for adding to cart
-		toast.success(`${product.title || product.name} added to cart!`);
-		// Removing from the favourites
-		dispatch(removeFromFavourites(product.id));
+		try {
+			dispatch(
+				addToCart({
+					product: {
+						id: product.id,
+						title: product.title,
+						description: product.description,
+						image: product.images[0] || "",
+						price: product.price,
+					},
+					quantity: 1,
+				}),
+			);
+			// Toast Notification for adding to cart
+			toast.success(`${product.title} added to cart!`);
+			// Removing from the favourites
+			dispatch(removeFromFavourites(product.id));
+		} catch (error) {
+			console.error("Error adding to cart:", error);
+			toast.error("Failed to add item to cart");
+		}
 	};
 
 	const handleClearAllFavourites = () => {
-		dispatch(clearFavourites());
+		try {
+			dispatch(clearFavourites());
+			toast.success("All favourites cleared");
+		} catch (error) {
+			console.error("Error clearing favourites:", error);
+			toast.error("Failed to clear favourites");
+		}
 	};
 
 	// Show loading state while checking authentication
@@ -141,24 +172,23 @@ export default function FavouritesPage() {
 								className="relative p-4 transition-shadow border border-gray-200 rounded-lg hover:shadow-md">
 								{/* Product Image */}
 								<div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-gray-300 to-gray-500">
-									<img
-										src={item.product.image}
-										alt={item.product.title}
-										className="object-cover w-full h-full"
-										onError={(e) => {
-											(e.target as HTMLImageElement).src =
-												"";
-											(
-												e.target as HTMLElement
-											).style.display = "none";
-											const parent = (
-												e.target as HTMLElement
-											).parentElement;
-											if (parent) {
-												parent.innerHTML = `<div class="flex items-center justify-center h-full text-white text-xs">ID: ${item.product.id}</div>`;
-											}
-										}}
-									/>
+									{item.product.images &&
+									item.product.images.length > 0 ? (
+										<img
+											src={item.product.images[0]}
+											alt={item.product.title}
+											className="object-cover w-full h-full"
+											onError={(e) => {
+												(
+													e.target as HTMLImageElement
+												).style.display = "none";
+											}}
+										/>
+									) : (
+										<div className="flex items-center justify-center h-full text-xs text-white">
+											ID: {item.product.id}
+										</div>
+									)}
 
 									{/* Unfavourite Button */}
 									<button
@@ -191,10 +221,7 @@ export default function FavouritesPage() {
 									{/* Add to Cart Button */}
 									<button
 										onClick={() =>
-											addToCartHandler({
-												...item.product,
-												name: item.product.title,
-											})
+											addToCartHandler(item.product)
 										}
 										className="w-full px-4 py-2 mt-3 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
 										<ShoppingCartIcon className="inline-block w-4 h-4 mr-2" />

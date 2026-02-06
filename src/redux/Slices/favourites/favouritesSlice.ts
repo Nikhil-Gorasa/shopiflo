@@ -1,10 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { item } from "@/types/cart.types";
-
-interface FavouritesState {
-	email: string;
-	favouriteItems: item[];
-}
+import { FavouriteItem, FavouritesState } from "@/types/favourite.types";
 
 // Load favourites from localStorage based on user's email
 const loadFavouritesFromStorage = (email: string): FavouritesState => {
@@ -67,7 +62,7 @@ const favouritesSlice = createSlice({
 			state.email = userFavourites.email;
 			state.favouriteItems = userFavourites.favouriteItems;
 		},
-		addToFavourites: (state, action: { payload: item }) => {
+		addToFavourites: (state, action: { payload: FavouriteItem }) => {
 			// If item already exists in favourites, do not add again
 			const existingItem = state.favouriteItems.find(
 				(item) => item.product.id === action.payload.product.id,
@@ -86,7 +81,7 @@ const favouritesSlice = createSlice({
 			saveFavouritesToStorage(state);
 		},
 		// Toggle favourite status
-		toggleFavourite: (state, action: { payload: item }) => {
+		toggleFavourite: (state, action: { payload: FavouriteItem }) => {
 			const existingItem = state.favouriteItems.find(
 				(item) => item.product.id === action.payload.product.id,
 			);

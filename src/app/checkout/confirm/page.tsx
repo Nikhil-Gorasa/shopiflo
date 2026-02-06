@@ -2,29 +2,19 @@
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/redux/Slices/cart/cartSlice";
 
+import {
+	ShippingAddress,
+	PaymentDetails,
+	CheckoutState,
+} from "@/types/checkout.types";
 export default function ConfirmPage() {
-	const [address, setAddress] = useState<{
-		firstName?: string;
-		lastName?: string;
-		email?: string;
-		address?: string;
-		apartment?: string;
-		city?: string;
-		state?: string;
-		postalCode?: string;
-		country?: string;
-		countryCode?: string;
-		phone?: string;
-	} | null>(null);
-	const [payment, setPayment] = useState<{
-		cardName?: string;
-		cardNumber?: string;
-		expiry?: string;
-		cvc?: string;
-	} | null>(null);
+	const [address, setAddress] = useState<ShippingAddress | null>(null);
+	const [payment, setPayment] = useState<PaymentDetails | null>(null);
 	const router = useRouter();
-
+	const dispatch = useDispatch();
 	useEffect(() => {
 		const CheckoutData = localStorage.getItem("checkouts");
 		const currentUser = JSON.parse(
@@ -32,28 +22,7 @@ export default function ConfirmPage() {
 		);
 		// Searching for the current logged in user's checkout data
 		const CheckoutObj = JSON.parse(CheckoutData || "[]").find(
-			(checkout: {
-				email: string;
-				shippingAddress?: {
-					firstName?: string;
-					lastName?: string;
-					email?: string;
-					address?: string;
-					apartment?: string;
-					city?: string;
-					state?: string;
-					postalCode?: string;
-					country?: string;
-					countryCode?: string;
-					phone?: string;
-				};
-				paymentDetails?: {
-					cardName?: string;
-					cardNumber?: string;
-					expiry?: string;
-					cvc?: string;
-				};
-			}) => {
+			(checkout: CheckoutState) => {
 				return currentUser && checkout.email === currentUser.email;
 			},
 		);
@@ -63,6 +32,9 @@ export default function ConfirmPage() {
 			setAddress(CheckoutObj.shippingAddress);
 			setPayment(CheckoutObj.paymentDetails);
 		}
+
+		// Clearing Cart
+		dispatch(clearCart());
 	}, []);
 
 	return (

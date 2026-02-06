@@ -1,3 +1,4 @@
+import Footer from "@/_components/footer/Footer";
 import Navbar from "@/_components/Navbar/Navbar";
 import { Suspense } from "react";
 
@@ -13,8 +14,8 @@ export default function DashboardLayout({
 			<Suspense fallback={<div>Loading...</div>}>
 				<Navbar />
 			</Suspense>
-			<main>{children}</main>
+			<main className="flex-1">{children}</main>
+			<Footer />
 		</>
-		// TODO: FOOTER
 	);
 }
