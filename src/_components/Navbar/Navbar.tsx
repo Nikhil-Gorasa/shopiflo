@@ -12,7 +12,14 @@ import {
 	ShoppingCartIcon,
 	HeartIcon,
 	Squares2X2Icon,
+	Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+import {
+	ShoppingCartIcon as ShoppingCartIconSolid,
+	HeartIcon as HeartIconSolid,
+	Squares2X2Icon as Squares2X2IconSolid,
+	Cog6ToothIcon as Cog6ToothIconSolid,
+} from "@heroicons/react/24/solid";
 
 export default function Navbar() {
 	const router = useRouter();
@@ -28,6 +35,7 @@ export default function Navbar() {
 		router.push(`/dashboard/products?${params.toString()}`);
 	}
 
+	// TODO: ABSTRACT LOGIC Buttons
 	// if search is empty, remove the search param - but only on products listing page
 	useEffect(() => {
 		if (searchQuery === "" && pathname === "/dashboard/products") {
@@ -71,55 +79,90 @@ export default function Navbar() {
 			</div>
 
 			{/* RIGHT — Links */}
-			<div className="flex items-center gap-6 text-sm font-medium">
+			<div className="flex items-center gap-1 text-sm font-medium">
 				{/* Categories */}
-				<div className="flex items-center gap-1 hover:text-primary">
-					<button>
-						<Squares2X2Icon className="w-6 h-6 text-text-secondary" />
-					</button>
-					<Link
-						href="/categories"
-						className="transition text-text-secondary hover:text-primary">
-						Categories
-					</Link>
-				</div>
+				<Link
+					href="/dashboard/products"
+					className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ease-in-out group ${
+						pathname === "/dashboard/products"
+							? "text-primary"
+							: "text-text-secondary hover:text-primary"
+					}`}>
+					<div className="relative">
+						{pathname === "/dashboard/products" ? (
+							<Squares2X2IconSolid className="w-6 h-6" />
+						) : (
+							<>
+								<Squares2X2Icon className="w-6 h-6 transition-opacity duration-300 group-hover:opacity-0" />
+								<Squares2X2IconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+							</>
+						)}
+					</div>
+					<span className="font-medium">Products</span>
+				</Link>
 
 				{/* Cart */}
-				<div className="flex items-center gap-1">
-					<button>
-						<ShoppingCartIcon className="w-6 h-6 text-text-secondary hover:text-primary" />
-					</button>
-
-					<Link
-						href="/dashboard/cart"
-						className="transition text-text-secondary hover:text-primary">
-						Cart
-					</Link>
-				</div>
+				<Link
+					href="/dashboard/cart"
+					className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ease-in-out group ${
+						pathname === "/dashboard/cart"
+							? "text-primary"
+							: "text-text-secondary hover:text-primary"
+					}`}>
+					<div className="relative">
+						{pathname === "/dashboard/cart" ? (
+							<ShoppingCartIconSolid className="w-6 h-6" />
+						) : (
+							<>
+								<ShoppingCartIcon className="w-6 h-6 transition-opacity duration-300 group-hover:opacity-0" />
+								<ShoppingCartIconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+							</>
+						)}
+					</div>
+					<span className="font-medium">Cart</span>
+				</Link>
 
 				{/* Favourites */}
-				<div className="flex items-center gap-1">
-					<button>
-						<HeartIcon className="w-6 h-6 text-text-secondary hover:text-primary" />
-					</button>
-					<Link
-						href="/dashboard/favourites"
-						className="transition text-text-secondary hover:text-primary">
-						Favourites
-					</Link>
-				</div>
+				<Link
+					href="/dashboard/favourites"
+					className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ease-in-out group ${
+						pathname === "/dashboard/favourites"
+							? "text-primary"
+							: "text-text-secondary hover:text-primary"
+					}`}>
+					<div className="relative">
+						{pathname === "/dashboard/favourites" ? (
+							<HeartIconSolid className="w-6 h-6" />
+						) : (
+							<>
+								<HeartIcon className="w-6 h-6 transition-opacity duration-300 group-hover:opacity-0" />
+								<HeartIconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+							</>
+						)}
+					</div>
+					<span className="font-medium">Favourites</span>
+				</Link>
 
 				{/* Settings */}
-				<div className="flex items-center gap-1">
-					<button>
-						<Squares2X2Icon className="w-6 h-6 text-text-secondary hover:text-primary" />
-					</button>
-					<Link
-						href="/dashboard/settings"
-						className="transition text-text-secondary hover:text-primary">
-						Settings
-					</Link>
-				</div>
+				<Link
+					href="/dashboard/profile"
+					className={`flex items-center gap-2 px-3 py-2 transition-all duration-300 ease-in-out group ${
+						pathname === "/dashboard/profile"
+							? "text-primary"
+							: "text-text-secondary hover:text-primary"
+					}`}>
+					<div className="relative">
+						{pathname === "/dashboard/profile" ? (
+							<Cog6ToothIconSolid className="w-6 h-6" />
+						) : (
+							<>
+								<Cog6ToothIcon className="w-6 h-6 transition-opacity duration-300 group-hover:opacity-0" />
+								<Cog6ToothIconSolid className="absolute inset-0 w-6 h-6 transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+							</>
+						)}
+					</div>
+					<span className="font-medium">Profile</span>
+				</Link>
 			</div>
 		</nav>
 	);

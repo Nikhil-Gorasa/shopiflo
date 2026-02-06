@@ -13,7 +13,10 @@ import {
 	decreaseQuantity,
 	increaseQuantity,
 } from "@/redux/Slices/cart/cartSlice";
-import { addToFavourites } from "@/redux/Slices/favourites/favouritesSlice";
+import {
+	addToFavourites,
+	toggleFavourite,
+} from "@/redux/Slices/favourites/favouritesSlice";
 
 export interface Product {
 	id: number;
@@ -66,12 +69,21 @@ export default function ProductOverview({ productId }: { productId: string }) {
 
 	const dispatch = useAppDispatch();
 	const cartItems = useAppSelector((state) => state.cart.cartItems);
+	const favouriteItems = useAppSelector(
+		(state) => state.favourites.favouriteItems,
+	);
 
 	async function fetchProductDetails(productId: string) {
 		const req = await fetch(`https://dummyjson.com/products/${productId}`);
 		const data = await req.json();
 		setProduct(data);
 		console.log("Fetched product data:", data);
+	}
+
+	function isProductAlreadyFavourite(id: number) {
+		return (
+			favouriteItems.find((item) => item.product.id === id) !== undefined
+		);
 	}
 
 	useEffect(() => {
@@ -257,10 +269,11 @@ export default function ProductOverview({ productId }: { productId: string }) {
 							</button>
 						)}
 
+						{/* If Already Favourite, Showing Remove from favourites button */}
 						<button
 							onClick={() =>
 								dispatch(
-									addToFavourites({
+									toggleFavourite({
 										product: {
 											id: product.id,
 											title: product.title,
@@ -272,9 +285,18 @@ export default function ProductOverview({ productId }: { productId: string }) {
 									}),
 								)
 							}
-							className="px-4 py-2 border rounded-lg text-primary border-primary hover:bg-primary/10">
-							<HeartIcon className="inline-block w-5 h-5 mr-2" />
-							Add to Favourites
+							className="px-4 py-2 text-red-500 border border-red-500 rounded-lg hover:bg-primary/10">
+							{isProductAlreadyFavourite(product.id) ? (
+								<>
+									<HeartIcon className="inline-block w-5 h-5 mr-2 fill-red-500" />
+									Remove from Favourites
+								</>
+							) : (
+								<>
+									<HeartIcon className="inline-block w-5 h-5 mr-2 text-red-500" />
+									Add to Favourites
+								</>
+							)}
 						</button>
 					</div>
 				</div>

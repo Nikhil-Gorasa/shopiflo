@@ -21,7 +21,7 @@ const authSlice = createSlice({
 			state.user = action.payload.email;
 		},
 		// Logout Action
-		logout(state) {
+		clearSession(state) {
 			state.isAuthenticated = false;
 			state.user = null;
 		},
@@ -57,5 +57,5 @@ const authSlice = createSlice({
 	},
 });
 
-export const { setSession, logout } = authSlice.actions;
+export const { setSession, clearSession } = authSlice.actions;
 export default authSlice.reducer;

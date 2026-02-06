@@ -1,12 +1,10 @@
 "use client";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import {
-	increaseQuantity,
-	decreaseQuantity,
-	removeFromCart,
-	clearCart,
-} from "@/redux/Slices/cart/cartSlice";
+import { clearCart } from "@/redux/Slices/cart/cartSlice";
+
+import Link from "next/link";
+
 import {
 	TrashIcon,
 	ShoppingBagIcon,
@@ -162,9 +160,13 @@ export default function CartPage() {
 									</span>
 								</div>
 
-								<button className="w-full px-6 py-3 mt-6 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
-									<CreditCardIcon className="inline-block w-5 h-5 mr-2" />
-									Proceed to Checkout
+								<button className="flex w-full">
+									<Link
+										href="/checkout"
+										className="w-full px-6 py-3 mt-2 text-white transition rounded-lg bg-primary hover:bg-primary-dark">
+										<CreditCardIcon className="inline-block w-5 h-5 mr-2" />
+										Proceed to Checkout
+									</Link>
 								</button>
 
 								<div className="mt-4 text-xs text-center text-gray-500">
@@ -175,7 +177,7 @@ export default function CartPage() {
 							</div>
 						</div>
 
-						{/* Promo Code */}
+						{/* Promo Code
 						<div className="p-6 mt-6 bg-white rounded-lg shadow-sm">
 							<h3 className="mb-4 font-medium">Promo Code</h3>
 							<div className="flex gap-2">
@@ -188,7 +190,7 @@ export default function CartPage() {
 									Apply
 								</button>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>

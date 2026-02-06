@@ -5,6 +5,8 @@ import { useAppDispatch } from "@/hooks/reduxhooks";
 import { setSession } from "@/redux/Slices/auth/authSlice";
 import { loadUserCart } from "@/redux/Slices/cart/cartSlice";
 import { loadUserFavourites } from "@/redux/Slices/favourites/favouritesSlice";
+import { loadUserCheckout } from "@/redux/Slices/checkout/checkoutSlice";
+
 import store from "../../redux/store";
 
 function SessionInitializer() {
@@ -19,10 +21,10 @@ function SessionInitializer() {
 				dispatch(setSession({ email: authData.email }));
 				dispatch(loadUserCart(authData.email));
 				dispatch(loadUserFavourites(authData.email));
+				dispatch(loadUserCheckout(authData.email));
 			} catch (error) {
 				console.error("Error restoring session:", error);
 				// If there's an error parsing, clear the invalid session data
-				// TODO:
 			}
 		}
 	}, [dispatch]);

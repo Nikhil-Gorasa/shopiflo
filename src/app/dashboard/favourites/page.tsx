@@ -13,6 +13,7 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import toast from "react-hot-toast";
 
 export default function FavouritesPage() {
 	const dispatch = useAppDispatch();
@@ -50,6 +51,10 @@ export default function FavouritesPage() {
 				quantity: 1,
 			}),
 		);
+		// Toast Notification for adding to cart
+		toast.success(`${product.title} added to cart!`);
+		// Removing from the favourites
+		dispatch(removeFromFavourites(product.id));
 	};
 
 	const handleClearAllFavourites = () => {
@@ -176,34 +181,7 @@ export default function FavouritesPage() {
 											{item.product.price?.toFixed(2) ||
 												"0.00"}
 										</span>
-										{item.product.discountPercentage && (
-											<span className="px-2 py-1 text-xs text-green-600 bg-green-100 rounded-full">
-												-
-												{
-													item.product
-														.discountPercentage
-												}
-												%
-											</span>
-										)}
 									</div>
-
-									{/* Rating */}
-									{item.product.rating && (
-										<div className="flex items-center gap-1">
-											<div className="flex items-center">
-												{[...Array(5)].map((_, i) => (
-													<svg
-														key={i}
-														className={`w-4 h-4 ${i < Math.floor(item.product.rating) ? "text-yellow-400" : "text-gray-300"}`}
-														fill="currentColor"
-														viewBox="0 0 20 20">
-														<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-													</svg>
-												))}
-											</div>
-										</div>
-									)}
 
 									{/* Add to Cart Button */}
 									<button
